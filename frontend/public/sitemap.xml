@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Only public, indexable routes. Admin, Hospital Console, member dashboard
+     and the officer token links are deliberately left out. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://roskyro.in/</loc><priority>1.0</priority></url>
+  <url><loc>https://roskyro.in/for-patients</loc><priority>0.9</priority></url>
+  <url><loc>https://roskyro.in/for-hospitals</loc><priority>0.9</priority></url>
+  <url><loc>https://roskyro.in/membership/info</loc><priority>0.8</priority></url>
+  <url><loc>https://roskyro.in/membership/join</loc><priority>0.7</priority></url>
+  <url><loc>https://roskyro.in/membership/priority-access</loc><priority>0.7</priority></url>
+  <url><loc>https://roskyro.in/become-a-partner</loc><priority>0.6</priority></url>
+  <url><loc>https://roskyro.in/feedback</loc><priority>0.4</priority></url>
+  <url><loc>https://roskyro.in/terms</loc><priority>0.3</priority></url>
+  <url><loc>https://roskyro.in/privacy</loc><priority>0.3</priority></url>
+</urlset>

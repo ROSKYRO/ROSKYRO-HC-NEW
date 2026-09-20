@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Private surfaces — no reason for these to be crawled or indexed.
+Disallow: /admin
+Disallow: /admin/
+Disallow: /hospital/
+Disallow: /officer/
+Disallow: /member
+
+Sitemap: https://roskyro.in/sitemap.xml
