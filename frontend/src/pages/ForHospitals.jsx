@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Users, UserCheck, HeartHandshake, MessageCircle, MessageSquare, Sparkles, Wallet,
-  ClipboardCheck, ArrowRight, Building, CheckCircle2, ShieldCheck, Mail, Send
+  ClipboardCheck, ArrowRight, Building, CheckCircle2, ShieldCheck, Mail, Send,
+  AlertTriangle, Stethoscope, Crown, Ambulance, PhoneCall, Lock, FileCheck2, Quote
 } from "lucide-react";
 import { BRAND, SUPPORT_EMAIL, SUPPORT_PHONE_DISPLAY, HOSPITAL_WA_LINK } from "../config";
 import useSEO from "../hooks/useSEO";
@@ -85,6 +86,81 @@ const ONBOARDING_STEPS = [
   },
 ];
 
+const PROBLEMS = [
+  "Patients and attendants get confused — which counter to go to, who to ask.",
+  "Repeated family queries at the nursing desk cost clinical staff both time and focus.",
+  "The discharge process slows down due to last-minute paperwork, pharmacy clearance and billing delays.",
+  "Out-of-town or distant attendants don't get structured updates — leading to repeated calls and anxiety.",
+  "The patient experience is inconsistent — every staff member handles things differently.",
+  "Maintaining dedicated concierge / PRO staff means additional recruitment, training and payroll cost for the hospital.",
+];
+
+const RO_RESPONSIBILITIES = [
+  "Counsels patients and attendants on treatment and related procedures.",
+  "Explains treatment plans, investigations, procedures and packages clearly and professionally.",
+  "Provides ongoing counselling support to antenatal and other long-treatment patients throughout their hospital journey.",
+  "Coordinates with doctors, nursing staff and other departments for smooth patient care.",
+  "Assists patients with admission, investigations, procedures and discharge-related coordination.",
+  "Explains the hospital's services, packages, billing process and applicable policies to the patient.",
+  "Maintains counselling records and follows up with patients as needed.",
+  "Addresses patient queries and concerns promptly and professionally.",
+  "Improves patient conversion and satisfaction through ethical counselling.",
+  "Maintains confidentiality of patient information and follows the hospital's policies/protocols.",
+  "Escalates medical, financial or service-related concerns to the concerned department.",
+];
+
+const RO_VS_DOCTOR = {
+  ro: [
+    "Admission formalities and paperwork",
+    "Investigation & department coordination",
+    "Billing and policy guidance",
+    "Discharge coordination",
+    "Authorized family updates",
+  ],
+  doctor: [
+    "Every treatment-related decision",
+    "Diagnosis and clinical judgement",
+    "Procedure execution",
+    "Medicine and dosage decisions",
+    "Responsibility for medical outcomes",
+  ],
+};
+
+const MEMBERSHIP_HOSPITAL_BENEFITS = [
+  {
+    icon: Crown,
+    title: "Priority Officer Dispatch",
+    body: "Instant/priority Relationship Officer assignment on Family & NRI Care plans — in some cases within 20 minutes.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Dedicated Family Care Manager",
+    body: "Complete admission & discharge oversight with a senior family care manager, further reducing load on hospital staff.",
+  },
+  {
+    icon: Stethoscope,
+    title: "Second-Opinion Coordination",
+    body: "Second-opinion consultation coordination — reducing patient/family confusion and unnecessary escalation.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Multi-Channel Family Updates",
+    body: "Group updates for large families or out-of-town attendants — reducing pressure at the nursing desk.",
+  },
+  {
+    icon: Ambulance,
+    title: "Ambulance & Travel Coordination",
+    body: "Verified ambulance and medical-travel coordination — helping with hospital logistics in emergency or referral cases.",
+  },
+];
+
+const TRUST_POINTS = [
+  { icon: ShieldCheck, text: "Every Relationship Officer is 100% police-verified and background-checked." },
+  { icon: FileCheck2, text: "Trained by ROSKYRO in line with the hospital's protocols, confidentiality requirements and escalation process." },
+  { icon: Lock, text: "Counselling records are maintained and patient information is handled with strict confidentiality." },
+  { icon: AlertTriangle, text: "Any medical, financial or service-related concern is escalated directly to the concerned hospital department — nothing is handled 'silently'." },
+];
+
 export default function ForHospitals() {
   const [inquirySent, setInquirySent] = useState(false);
   const [inquiryForm, setInquiryForm] = useState({
@@ -130,9 +206,16 @@ export default function ForHospitals() {
             The Patient Concierge Program
           </h1>
 
-          <p className="text-white/80 max-w-2xl mx-auto leading-relaxed text-base sm:text-lg mb-10">
+          <p className="text-white/80 max-w-2xl mx-auto leading-relaxed text-base sm:text-lg mb-8">
             A dedicated, background-verified ROSKYRO Relationship Officer for every enrolled patient — handling non-clinical coordination and family communication so your doctors and nurses can focus 100% on medicine.
           </p>
+
+          <div className="max-w-xl mx-auto mb-10 flex items-start gap-3 text-left bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5">
+            <Quote className="w-5 h-5 text-indigo-300 shrink-0 mt-0.5" />
+            <p className="text-white/70 text-xs sm:text-sm leading-relaxed italic">
+              ROSKYRO = Healthcare Concierge + Patient Assistance + Hospital Partnership Platform. ROSKYRO does not provide treatment — it provides support, coordination and assistance to the patient and family around the treatment.
+            </p>
+          </div>
 
           <div className="flex flex-wrap justify-center gap-4">
             <a
@@ -177,6 +260,24 @@ export default function ForHospitals() {
         </div>
       </div>
 
+      {/* The Problem hospitals face today */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-20">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="text-xs font-bold tracking-widest uppercase text-clay">The Problem</span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-3">
+            What Hospitals &amp; Clinics Struggle With Today
+          </h2>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {PROBLEMS.map((p) => (
+            <div key={p} className="flex items-start gap-3 bg-clay/5 border border-clay/20 rounded-2xl p-4 sm:p-5">
+              <AlertTriangle className="w-4 h-4 text-clay shrink-0 mt-0.5" />
+              <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">{p}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Why Hospitals Partner */}
       <div id="benefits" className="max-w-6xl mx-auto px-4 sm:px-6 py-20">
         <div className="text-center max-w-2xl mx-auto mb-14">
@@ -201,6 +302,38 @@ export default function ForHospitals() {
           ))}
         </div>
       </div>
+
+      {/* What the Relationship Officer actually does, day to day */}
+      <div className="bg-indigo-950 text-white py-20">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold tracking-widest uppercase text-indigo-300">Roles &amp; Responsibilities</span>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold mt-2 mb-3">
+              What Your Dedicated Relationship Officer Actually Does
+            </h2>
+            <p className="text-white/60 text-sm sm:text-base">
+              For every enrolled patient / attendant, the RO delivers this non-clinical support.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3 mb-8">
+            {RO_RESPONSIBILITIES.map((r) => (
+              <div key={r} className="flex items-start gap-2.5 bg-white/5 border border-white/10 rounded-xl p-3.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <p className="text-xs sm:text-sm text-white/80 leading-relaxed">{r}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="max-w-3xl mx-auto flex items-start gap-3 bg-indigo-500/10 border border-indigo-400/30 rounded-2xl p-4 sm:p-5">
+            <ShieldCheck className="w-5 h-5 text-indigo-300 shrink-0 mt-0.5" />
+            <p className="text-white/70 text-xs sm:text-sm leading-relaxed">
+              <strong className="text-white">Important:</strong> An RO is not a medical attendant and does not make any treatment-related decisions. Every clinical decision always stays with the doctor and clinical team — the RO simply handles all the non-clinical work "around" the medicine, so clinical staff can focus purely on medicine.
+            </p>
+          </div>
+        </div>
+      </div>
+
 
       {/* How a case is enrolled */}
       <div className="bg-slate-100/70 border-y border-ink/10 py-20">
@@ -247,6 +380,96 @@ export default function ForHospitals() {
               <span>{stage}</span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* RO vs. Doctor scope */}
+      <div className="bg-slate-100/70 border-y border-ink/10 py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold tracking-widest uppercase text-indigo-600">Clear Scope, No Overlap</span>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-3">
+              What the RO Does vs. What Stays With the Doctor
+            </h2>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-5">
+            <div className="bg-white border border-indigo-200 rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <UserCheck className="w-5 h-5 text-indigo-600" />
+                <h3 className="font-bold text-ink text-sm sm:text-base">Relationship Officer (Non-Clinical)</h3>
+              </div>
+              <ul className="space-y-2.5">
+                {RO_VS_DOCTOR.ro.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-xs sm:text-sm text-ink-muted">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-white border border-ink/10 rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Stethoscope className="w-5 h-5 text-ink" />
+                <h3 className="font-bold text-ink text-sm sm:text-base">Doctor / Clinical Team</h3>
+              </div>
+              <ul className="space-y-2.5">
+                {RO_VS_DOCTOR.doctor.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-xs sm:text-sm text-ink-muted">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-ink-muted shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Extra benefit to the hospital via Membership plans */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs font-bold tracking-widest uppercase text-indigo-600">Membership Spillover Benefit</span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-3">
+            Extra Benefit to Your Hospital From Concierge Memberships
+          </h2>
+          <p className="text-ink-muted text-sm sm:text-base">
+            ROSKYRO's Concierge Membership (Care / Family / NRI Care) gives enrolled patients an extra layer of support — which benefits the hospital directly too.
+          </p>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {MEMBERSHIP_HOSPITAL_BENEFITS.map(({ icon: Icon, title, body }) => (
+            <div key={title} className="bg-white border border-ink/10 rounded-2xl p-6 shadow-xs">
+              <div className="w-11 h-11 rounded-xl bg-violet/10 text-violet flex items-center justify-center mb-4">
+                <Icon className="w-5 h-5" />
+              </div>
+              <div className="font-display text-base font-bold text-ink mb-1.5">{title}</div>
+              <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">{body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Trust & Verification */}
+      <div className="bg-emerald-950 text-white py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="text-xs font-bold tracking-widest uppercase text-emerald-300">Trust &amp; Verification</span>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold mt-2">Every Officer, Fully Accountable</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {TRUST_POINTS.map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-4">
+                <Icon className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" />
+                <p className="text-xs sm:text-sm text-white/80 leading-relaxed">{text}</p>
+              </div>
+            ))}
+          </div>
+          <div className="max-w-3xl mx-auto mt-8 flex items-start gap-3 bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5">
+            <Quote className="w-5 h-5 text-emerald-300 shrink-0 mt-0.5" />
+            <p className="text-white/70 text-xs sm:text-sm leading-relaxed italic">
+              A ROSKYRO Relationship Officer is not just a "helper" — it is a zero-payroll, background-verified, fully-managed patient-experience layer for the hospital/clinic that frees up clinical staff, speeds up discharge, structures family communication, and measurably improves patient satisfaction.
+            </p>
+          </div>
         </div>
       </div>
 

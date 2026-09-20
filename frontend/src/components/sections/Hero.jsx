@@ -14,10 +14,8 @@ import {
   ChevronRight
 } from "lucide-react";
 import { BOOK_WA_LINK, SUPPORT_PHONE_DISPLAY, PILOT_CITY, PILOT_STATE } from "../../config";
-import { useLanguage } from "../../context/LanguageContext";
 
 export default function Hero() {
-  const { language, t } = useLanguage();
   const [activeHeroCard, setActiveHeroCard] = useState(1); // 0: Hospitals, 1: Patients, 2: Officers
 
   return (
@@ -73,21 +71,12 @@ export default function Hero() {
             </div>
 
             {/* Main Headline */}
-            {language === "hi" ? (
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.15] text-ink tracking-tight mb-5">
-                अस्पताल का काम हो या परिजनों की देखभाल, <br className="hidden sm:block" />
-                <span className="bg-brand-gradient bg-clip-text text-transparent">
-                  तीन मजबूत स्तंभों पर आधारित हेल्थकेयर।
-                </span>
-              </h1>
-            ) : (
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.12] text-ink tracking-tight mb-5">
-                India's Healthcare Concierge, <br className="hidden sm:block" />
-                <span className="bg-brand-gradient bg-clip-text text-transparent">
-                  Built on Three Core Pillars.
-                </span>
-              </h1>
-            )}
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.12] text-ink tracking-tight mb-5">
+              India's Healthcare Concierge, <br className="hidden sm:block" />
+              <span className="bg-brand-gradient bg-clip-text text-transparent">
+                Built on Three Core Pillars.
+              </span>
+            </h1>
 
             {/* Subtitle */}
             <p className="text-ink-muted text-base sm:text-lg leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">

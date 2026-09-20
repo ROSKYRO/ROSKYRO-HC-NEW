@@ -1,4 +1,4 @@
-import { Quote, ArrowRight, ShieldCheck, HeartHandshake, MessageSquare, Crown } from "lucide-react";
+import { Quote, ArrowRight, ShieldCheck, HeartHandshake, MessageSquare, Crown, Zap, UserCheck, Stethoscope, MessageCircle, Ambulance, CheckCircle2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { BRAND, SUPPORT_PHONE_DISPLAY, BOOK_WA_LINK } from "../config";
 import useSEO from "../hooks/useSEO";
@@ -14,6 +14,43 @@ const JOURNEY = [
   { stage: "Family Communication", body: "Structured updates to family, where you've authorized it — especially useful if they're in another city." },
   { stage: "Discharge", body: "Support right through to when you actually leave the hospital." },
   { stage: "Experience Closure", body: "A final check-in to make sure nothing was left unresolved." },
+];
+
+const MEMBERSHIP_VALUE = [
+  {
+    icon: Zap,
+    title: "Priority Relationship Officer Dispatch",
+    body: "On Family & NRI Care plans, RO assignment becomes instant/priority — in some cases within 20 minutes. Even during an emergency or urgent admission, there's no waiting around: a dedicated person is available almost immediately to begin counselling, coordination and guidance.",
+  },
+  {
+    icon: UserCheck,
+    title: "A Senior Family Care Manager, Not Just an RO",
+    body: "Membership adds a dedicated senior family care manager who oversees the entire admission-to-discharge journey — an extra layer of oversight beyond day-to-day coordination. Especially reassuring for elderly patients, longer treatments, or complex cases.",
+  },
+  {
+    icon: Stethoscope,
+    title: "Second-Opinion Consultation Coordination",
+    body: "Before any major diagnosis or treatment decision, a second expert opinion can be arranged easily through your Relationship Officer — reducing confusion and anxiety, without your family having to search for and arrange another doctor themselves.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Multi-Channel Family Group Updates",
+    body: "If relatives are in another city or country, they no longer need to call repeatedly for news. Structured, authorized updates reach the whole family automatically — reducing pressure on whoever is at the hospital.",
+  },
+  {
+    icon: Ambulance,
+    title: "Verified Ambulance & Medical-Travel Coordination",
+    body: "If a referral to another facility or emergency transport is needed, a verified, coordinated arrangement is already in place — instead of your family having to source transport at the last minute during a stressful moment.",
+  },
+];
+
+const CORE_RO_SUPPORT = [
+  "Counselling on treatment and related procedures.",
+  "Clear explanation of treatment plans, investigations, procedures and packages.",
+  "Coordination across admission, investigations, procedures and discharge.",
+  "Explanation of hospital services, packages, billing and applicable policies.",
+  "Prompt, professional handling of queries and concerns.",
+  "Confidentiality of patient information at every step.",
 ];
 
 export default function ForPatients() {
@@ -107,6 +144,54 @@ export default function ForPatients() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Why membership matters — the same guide facts, read from the
+          patient/family side rather than the hospital side */}
+      <div className="bg-slate-50 py-20">
+        <div className="max-w-4xl mx-auto px-5">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold tracking-widest uppercase text-violet">Why Membership Matters</span>
+            <h2 className="font-display text-3xl text-ink mt-3 mb-3">For You &amp; Your Family, Not Just the Hospital</h2>
+            <p className="text-sm text-ink/60 leading-relaxed">
+              Membership makes this support faster, senior-level, and continuous — all through one trusted concierge relationship.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-5 mb-10">
+            {MEMBERSHIP_VALUE.map(({ icon: Icon, title, body }) => (
+              <div key={title} className="bg-white border border-ink/10 rounded-card p-6">
+                <div className="w-10 h-10 rounded-xl bg-violet/10 text-violet flex items-center justify-center mb-4">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="font-semibold text-ink mb-1.5">{title}</div>
+                <p className="text-sm text-ink/60 leading-relaxed">{body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-white border border-ink/10 rounded-card p-6 sm:p-8">
+            <div className="font-semibold text-ink mb-4">Included with every membership, regardless of plan</div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {CORE_RO_SUPPORT.map((item) => (
+                <div key={item} className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-violet shrink-0 mt-0.5" />
+                  <p className="text-sm text-ink/60 leading-relaxed">{item}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-ink/40 mt-5">
+              Membership simply makes this support continuous and prioritized — you don't have to chase different departments to get any of it.
+            </p>
+          </div>
+
+          <div className="max-w-3xl mx-auto mt-10 relative bg-ink text-white rounded-card p-6 sm:p-8">
+            <Quote className="w-6 h-6 text-white/30 absolute top-5 left-5" />
+            <p className="pl-8 text-sm sm:text-base text-white/85 leading-relaxed italic">
+              Membership gives you faster access, senior-level oversight, second opinions, family-wide communication, and emergency logistics — all through one trusted concierge relationship. This is what makes the hospital journey feel less confusing and more reassuring, for the people living through it.
+            </p>
+          </div>
         </div>
       </div>
 

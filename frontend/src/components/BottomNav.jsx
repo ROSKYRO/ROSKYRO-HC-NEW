@@ -1,12 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, Building2, HeartHandshake, UserPlus, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { useLanguage } from "../context/LanguageContext";
 
 export default function BottomNav() {
   const location = useLocation();
   const { user } = useAuth();
-  const { t } = useLanguage();
 
   const isHome = location.pathname === "/";
   const isHospitals = location.pathname === "/for-hospitals";
@@ -15,13 +13,13 @@ export default function BottomNav() {
   const isAccount = location.pathname === "/member" || location.pathname === "/login";
 
   const items = [
-    { to: "/", label: t("bottom_home"), icon: Home, active: isHome },
-    { to: "/for-hospitals", label: t("bottom_hospitals"), icon: Building2, active: isHospitals },
-    { to: "/for-patients", label: t("bottom_patients"), icon: HeartHandshake, active: isPatients },
-    { to: "/become-a-partner", label: t("bottom_join"), icon: UserPlus, active: isPartner },
+    { to: "/", label: "Home", icon: Home, active: isHome },
+    { to: "/for-hospitals", label: "For Hospitals", icon: Building2, active: isHospitals },
+    { to: "/for-patients", label: "For Patients", icon: HeartHandshake, active: isPatients },
+    { to: "/become-a-partner", label: "Join ROSKYRO", icon: UserPlus, active: isPartner },
     {
       to: user ? "/member" : "/login",
-      label: user ? "Account" : t("bottom_login"),
+      label: user ? "Account" : "Login",
       icon: User,
       active: isAccount,
     },

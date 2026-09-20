@@ -9,50 +9,46 @@ import {
   User, 
   ShieldCheck,
   ChevronRight,
-  Globe,
-  Languages,
   Building2,
   HeartHandshake,
   UserPlus
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { useLanguage } from "../context/LanguageContext";
 import { BOOK_WA_LINK, SUPPORT_PHONE_DISPLAY, PILOT_CITY } from "../config";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-  const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
   const NAV_LINKS = [
-    { href: "/for-hospitals", label: t("nav_for_hospitals"), icon: Building2 },
-    { href: "/for-patients", label: t("nav_for_patients"), icon: HeartHandshake },
-    { href: "/become-a-partner", label: t("nav_partner"), icon: UserPlus },
+    { href: "/for-hospitals", label: "For Hospitals", icon: Building2 },
+    { href: "/for-patients", label: "For Patients & Families", icon: HeartHandshake },
+    { href: "/become-a-partner", label: "Join ROSKYRO", icon: UserPlus },
   ];
 
   const loggedInLinks = [
-    { to: "/member", label: t("nav_my_membership"), icon: Crown },
-    ...(user?.role === "admin" ? [{ to: "/admin", label: t("nav_admin"), icon: ShieldCheck }] : []),
+    { to: "/member", label: "My Membership", icon: Crown },
+    ...(user?.role === "admin" ? [{ to: "/admin", label: "Admin Console", icon: ShieldCheck }] : []),
     ...(user?.role === "hospital_staff" ? [{ to: "/hospital/dashboard", label: "Hospital Console", icon: Building2 }] : []),
   ];
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-ink/8 shadow-xs">
       
-      {/* Upper Announcement & Language Bar */}
+      {/* Upper Announcement Bar */}
       <div className="bg-ink text-white/80 text-[11px] font-medium border-b border-white/10 px-3 sm:px-6 py-1.5 transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           {/* Left: Pilot Status & Helpline */}
           <div className="flex items-center gap-2.5 sm:gap-4 overflow-hidden text-ellipsis whitespace-nowrap">
             <span className="flex items-center gap-1.5 text-emerald-400 font-semibold shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>{t("top_location")}</span>
+              <span>Ambikapur, Chhattisgarh Pilot Live</span>
             </span>
           </div>
 
-          {/* Right: Phone & Language Selector */}
+          {/* Right: Phone */}
           <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
             <a 
               href={BOOK_WA_LINK} 
@@ -61,39 +57,9 @@ export default function Navbar() {
               className="text-white/75 hover:text-white flex items-center gap-1 text-[11px] transition-colors"
             >
               <MessageSquare className="w-3 h-3 text-flare" />
-              <span className="hidden sm:inline">{t("top_helpline")}:</span>
+              <span className="hidden sm:inline">24/7 Helpline:</span>
               <span className="font-bold text-white">{SUPPORT_PHONE_DISPLAY}</span>
             </a>
-
-            {/* Language Switcher in Upper Bar */}
-            <div className="flex items-center bg-white/10 p-0.5 rounded-full border border-white/15">
-              <button
-                type="button"
-                onClick={() => setLanguage("en")}
-                className={`px-2 py-0.5 rounded-full text-[10px] font-bold transition-all ${
-                  language === "en" 
-                    ? "bg-white text-ink shadow-xs" 
-                    : "text-white/70 hover:text-white"
-                }`}
-                title="Switch to English"
-                aria-label="Switch language to English"
-              >
-                English
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage("hi")}
-                className={`px-2 py-0.5 rounded-full text-[10px] font-bold transition-all ${
-                  language === "hi" 
-                    ? "bg-brand-gradient text-white shadow-xs" 
-                    : "text-white/70 hover:text-white"
-                }`}
-                title="हिंदी में बदलें"
-                aria-label="Switch language to Hindi"
-              >
-                हिन्दी
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -123,7 +89,7 @@ export default function Navbar() {
           {/* Live Status Badge */}
           <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-[11px] font-medium text-emerald-800">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>{t("nav_pilot_badge")}</span>
+            <span>Ambikapur Pilot Live</span>
           </div>
         </div>
 
@@ -151,19 +117,6 @@ export default function Navbar() {
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-          {/* Quick Language Toggle Pill in Navbar */}
-          <div className="flex items-center bg-slate-100 hover:bg-slate-200/70 p-0.5 rounded-full border border-ink/10 transition-colors">
-            <button
-              type="button"
-              onClick={() => setLanguage(language === "en" ? "hi" : "en")}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold text-ink hover:text-violet transition-all"
-              title={language === "en" ? "हिंदी में देखें" : "Switch to English"}
-            >
-              <Globe className="w-3.5 h-3.5 text-violet" />
-              <span>{language === "en" ? "हिन्दी" : "English"}</span>
-            </button>
-          </div>
-
           {/* WhatsApp Direct */}
           <a
             href={BOOK_WA_LINK}
@@ -172,7 +125,7 @@ export default function Navbar() {
             className="hidden md:inline-flex items-center gap-1.5 text-xs md:text-sm font-semibold px-3 py-2 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300/80 hover:bg-emerald-100 transition-colors"
           >
             <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-            <span>{t("nav_whatsapp")}</span>
+            <span>WhatsApp</span>
           </a>
 
           {/* User Auth state */}
@@ -187,7 +140,7 @@ export default function Navbar() {
                   navigate("/");
                 }}
                 className="text-xs text-clay hover:bg-clay/10 p-1.5 rounded-lg transition-colors"
-                title={t("nav_logout")}
+                title="Log out"
               >
                 <LogOut className="w-4 h-4" />
               </button>
@@ -199,7 +152,7 @@ export default function Navbar() {
                 className="inline-flex items-center gap-1 text-xs md:text-sm font-semibold text-ink/70 hover:text-violet px-3 py-1.5 rounded-full hover:bg-violet/5 transition-colors"
               >
                 <User className="w-4 h-4" />
-                <span>{t("nav_login")}</span>
+                <span>Login</span>
               </Link>
               <Link
                 to="/hospital/login"
@@ -226,34 +179,6 @@ export default function Navbar() {
       {/* Mobile Drawer */}
       {open && (
         <div className="lg:hidden border-t border-ink/10 bg-white/98 backdrop-blur-xl px-5 py-5 flex flex-col gap-4 max-h-[85vh] overflow-y-auto animate-fadeIn shadow-xl">
-          
-          {/* Language Switcher in Mobile Drawer */}
-          <div className="p-3 bg-violet/5 rounded-2xl border border-violet/15 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Languages className="w-4 h-4 text-violet" />
-              <span className="text-xs font-bold text-ink">भाषा / Language:</span>
-            </div>
-            <div className="flex items-center bg-white rounded-full p-1 border border-ink/10 shadow-2xs">
-              <button
-                type="button"
-                onClick={() => setLanguage("en")}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
-                  language === "en" ? "bg-violet text-white shadow-xs" : "text-ink/60"
-                }`}
-              >
-                English
-              </button>
-              <button
-                type="button"
-                onClick={() => setLanguage("hi")}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
-                  language === "hi" ? "bg-violet text-white shadow-xs" : "text-ink/60"
-                }`}
-              >
-                हिन्दी
-              </button>
-            </div>
-          </div>
 
           <div className="space-y-1">
             <div className="text-[11px] font-bold uppercase tracking-wider text-ink/40 px-2 pt-1">ROSKYRO Pillars</div>
@@ -307,7 +232,7 @@ export default function Navbar() {
               className="flex items-center justify-center gap-2 text-sm font-semibold px-4 py-3 rounded-xl bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 transition-colors"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>{t("mob_book_whatsapp")}</span>
+              <span>Chat on WhatsApp</span>
             </a>
 
             <a
@@ -318,7 +243,7 @@ export default function Navbar() {
               className="flex items-center justify-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-xl bg-slate-100 text-ink hover:bg-slate-200 transition-colors"
             >
               <MessageSquare className="w-4 h-4 text-clay" />
-              <span>{t("mob_emergency_support")}: {SUPPORT_PHONE_DISPLAY}</span>
+              <span>Emergency Support: {SUPPORT_PHONE_DISPLAY}</span>
             </a>
 
             {user ? (
@@ -330,7 +255,7 @@ export default function Navbar() {
                 }}
                 className="text-center text-xs font-medium text-clay hover:underline py-2"
               >
-                {t("nav_logout")}
+                Log out
               </button>
             ) : (
               <div className="flex items-center justify-center gap-4 py-2">
@@ -339,7 +264,7 @@ export default function Navbar() {
                   onClick={() => setOpen(false)}
                   className="text-center text-xs font-semibold text-ink/70 hover:text-violet"
                 >
-                  {t("nav_login")} →
+                  Login →
                 </Link>
                 <span className="text-ink/20">|</span>
                 <Link
