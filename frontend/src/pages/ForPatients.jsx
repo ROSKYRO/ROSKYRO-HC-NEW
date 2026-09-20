@@ -78,28 +78,6 @@ export default function ForPatients() {
         </div>
       </div>
 
-      {/* The introduction moment */}
-      <div className="max-w-3xl mx-auto px-5 py-20">
-        <div className="bg-slate-50 border border-ink/10 rounded-card p-8 sm:p-10 relative">
-          <Quote className="w-8 h-8 text-violet/30 absolute top-6 left-6" />
-          <div className="pl-8">
-            <p className="text-xs font-bold tracking-widest uppercase text-violet mb-4">
-              Within about 30 minutes of admission
-            </p>
-            <p className="text-lg sm:text-xl text-ink leading-relaxed font-medium">
-              "Namaste, main {BRAND} se Relationship Officer hoon. Aapke hospital stay ke dauran main aapki
-              non-medical coordination aur assistance mein help karunga. Treatment-related decisions aapke doctor aur
-              clinical team handle karenge. Agar admission, investigation coordination, discharge ya kisi hospital
-              process mein assistance chahiye, aap mujhse contact kar sakte hain."
-            </p>
-            <p className="text-sm text-ink/50 mt-6">
-              From that moment, you know exactly one thing: there's a person responsible for you. That's the
-              concierge experience.
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* What's included / what's not */}
       <div className="bg-slate-50 py-20">
         <div className="max-w-4xl mx-auto px-5 grid sm:grid-cols-2 gap-5">
