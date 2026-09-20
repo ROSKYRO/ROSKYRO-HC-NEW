@@ -1,0 +1,117 @@
+"""
+End-to-end check of the customer booking flow's timestamps (companion to
+test_timezone.py). Uses the REAL signup/login/JWT for the customer; only the
+admin dependency is overridden.
+
+What it protects: the customer's live "Time Elapsed" timer (MyBookings.jsx)
+computes `now - new Date(actual_start_at)`. If actual_start_at comes back as a
+naive "2026-09-19T09:20:00", an Indian browser reads it as IST and the timer
+starts at ~5h30m (with a matching running-cost estimate) the moment the visit
+begins. With a trailing "Z" it starts at 0.
+
+Run directly:  python test_booking_timestamps.py
+"""
+import os, sys, tempfile, re
+os.environ["DATABASE_URL"] = "sqlite:///" + tempfile.mktemp(suffix=".db")
+os.environ["AUTO_SEED"] = "false"
+sys.path.insert(0, ".")
+
+from datetime import datetime, timedelta, timezone
+from fastapi.testclient import TestClient
+from app.main import app
+# Give this script its own isolated SQLite file, regardless of what any
+# other test_*.py already imported earlier in this process — see
+# app/db/testing.py for why os.environ["DATABASE_URL"] above isn't
+# enough by itself once more than one of these scripts runs together.
+from app.db.testing import reset_test_database
+reset_test_database()
+from app.db.session import SessionLocal
+from app.models.user import User, UserRole
+from app.models.service import Service
+from app.models.agent import Agent, AgentStatus
+from app.core.security import hash_password
+from app.core import deps
+
+Z_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$")
+
+
+def check(label, ok, extra=""):
+    print(f"{'PASS' if ok else 'FAIL'} {label}" + (f"  {extra}" if extra else ""))
+    assert ok, label
+
+
+db = SessionLocal()
+admin = User(full_name="Admin", phone="9000000001", hashed_password=hash_password("p"), role=UserRole.admin)
+svc = Service(name="Hospital Concierge", slug="hospital-concierge", hourly_rate=249.0)
+v = dict(status=AgentStatus.active, id_verified=True, police_verified=True, references_checked=True,
+         interview_passed=True, training_completed=True, id_card_issued=True)
+agent = Agent(full_name="Partner One", phone="9111111111", **v)
+db.add_all([admin, svc, agent]); db.commit()
+SID, AID = svc.id, agent.id; db.close()
+app.dependency_overrides[deps.require_admin] = lambda: SessionLocal().query(User).filter(User.role == UserRole.admin).first()
+
+c = TestClient(app)
+
+print("\n=== real customer signup + login ===")
+r = c.post("/api/auth/signup", json={"full_name": "Asha Verma", "phone": "9876543210", "password": "secret123"})
+check("signup", r.status_code == 200, f"[{r.status_code}] {r.text[:120]}")
+r = c.post("/api/auth/login", json={"phone": "9876543210", "password": "secret123"})
+check("login", r.status_code == 200, f"[{r.status_code}]")
+H = {"Authorization": f"Bearer {r.json()['access_token']}"}
+
+print("\n=== customer books a visit (browser sends toISOString(), i.e. UTC with Z) ===")
+sched = (datetime.utcnow() + timedelta(hours=3)).replace(microsecond=0)   # what new Date(...).toISOString() would carry
+r = c.post("/api/bookings", headers=H, json={"service_id": SID, "address": "12 Station Rd", "booked_hours": 2,
+                                             "scheduled_start": sched.isoformat() + "Z"})
+check("create booking", r.status_code == 200, f"[{r.status_code}] {r.text[:150]}")
+b = r.json(); bid = b["id"]
+check("scheduled_start comes back as the same UTC instant, with Z", b["scheduled_start"] == sched.isoformat() + ".000Z", b["scheduled_start"])
+check("created_at is UTC-with-Z", Z_RE.match(b["created_at"]) is not None, b["created_at"])
+start_pin = b.get("start_pin") or c.get(f"/api/bookings/{bid}", headers=H).json().get("start_pin")
+
+print("\n=== a booking sent with an explicit IST offset is normalised, not double-shifted ===")
+ist = (sched + timedelta(hours=5, minutes=30)).isoformat() + "+05:30"
+r = c.post("/api/bookings", headers=H, json={"service_id": SID, "address": "x", "booked_hours": 1, "scheduled_start": ist})
+check("+05:30 input -> same UTC instant", r.json()["scheduled_start"] == sched.isoformat() + ".000Z", r.json().get("scheduled_start"))
+
+print("\n=== visit lifecycle: assign -> en route -> arrived -> Start PIN -> End PIN ===")
+check("assign partner", c.post(f"/api/bookings/{bid}/assign", json={"agent_id": AID}).status_code == 200)
+check("en route", c.post(f"/api/bookings/{bid}/en-route").status_code == 200)
+check("arrived", c.post(f"/api/bookings/{bid}/arrived").status_code == 200)
+
+before = datetime.utcnow()
+r = c.post(f"/api/bookings/{bid}/start", json={"start_pin": start_pin})
+check("customer submits Start PIN", r.status_code == 200, f"[{r.status_code}] {r.text[:120]}")
+started = r.json()["actual_start_at"]
+check("actual_start_at has the Z", Z_RE.match(started) is not None, started)
+
+# This is exactly the arithmetic LiveTimer does in the browser.
+started_dt = datetime.fromisoformat(started.replace("Z", "+00:00"))
+elapsed = (datetime.now(timezone.utc) - started_dt).total_seconds()
+check("live-timer elapsed right after start is ~0s (was ~19,800s = 5h30m in IST before the fix)", 0 <= elapsed < 5, f"{elapsed:.2f}s")
+
+mine = c.get("/api/bookings/mine", headers=H).json()
+check("customer's booking list: every timestamp is UTC-with-Z",
+      all(Z_RE.match(x["scheduled_start"]) and Z_RE.match(x["created_at"]) and (x["actual_start_at"] is None or Z_RE.match(x["actual_start_at"])) for x in mine))
+
+end_pin = c.get(f"/api/admin/bookings/{bid}/pins").json()["end_pin"]
+r = c.post(f"/api/bookings/{bid}/end", json={"end_pin": end_pin})
+check("customer submits End PIN", r.status_code == 200, f"[{r.status_code}] {r.text[:120]}")
+check("actual_end_at has the Z", Z_RE.match(r.json()["actual_end_at"]) is not None, r.json()["actual_end_at"])
+
+print("\n=== admin views ===")
+ab = c.get("/api/admin/bookings").json()
+check("admin bookings list: scheduled_start / created_at are UTC-with-Z", all(Z_RE.match(x["scheduled_start"]) and Z_RE.match(x["created_at"]) for x in ab), str(len(ab)) + " bookings")
+d = c.get("/api/admin/dashboard")
+check("admin dashboard responds", d.status_code == 200)
+
+print("\nALL BOOKING-TIMESTAMP CHECKS DONE")
+
+# ---------------------------------------------------------------------------
+# DISABLED (renamed from .py to .py.disabled).
+# This file imports `app.models.service.Service`, which no longer exists — the
+# on-demand booking feature it covers was removed from the codebase. As a .py
+# it failed at import time, so `pytest` in backend/ could never collect ANY
+# test, including the three that do still pass. Delete this file, or rewrite
+# it against the current models, then rename it back.
+# ---------------------------------------------------------------------------

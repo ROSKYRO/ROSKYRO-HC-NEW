@@ -1,0 +1,34 @@
+import enum
+from datetime import datetime
+
+from sqlalchemy import Column, Integer, String, DateTime, Enum, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
+
+from app.db.session import Base
+
+
+class UserRole(str, enum.Enum):
+    customer = "customer"
+    admin = "admin"
+    support = "support"
+    hospital_staff = "hospital_staff"  # logs into the Hospital Console only, scoped to one hospital
+
+
+class User(Base):
+    """A customer (or internal staff) account on ROSKYRO."""
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    full_name = Column(String, nullable=False)
+    phone = Column(String, unique=True, index=True, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=True)
+    hashed_password = Column(String, nullable=False)
+    preferred_language = Column(String, default="en")  # en / hi / bho etc.
+    role = Column(Enum(UserRole), default=UserRole.customer, nullable=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Only set (and only meaningful) for role == hospital_staff.
+    hospital_id = Column(Integer, ForeignKey("hospitals.id"), nullable=True)
+
+    hospital = relationship("Hospital", back_populates="staff")
