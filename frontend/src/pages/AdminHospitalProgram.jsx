@@ -691,7 +691,7 @@ function HospitalsTab({ hospitals, onChanged, onCaseCreated }) {
               <div>
                 <div className="font-semibold text-ink">{h.name}</div>
                 <div className="text-sm text-ink/50">{h.contact_name} · {h.contact_phone}</div>
-                <div className="text-sm text-ink/50 capitalize">{h.contract_status} · per-patient daily rate: {h.per_patient_daily_rate != null ? `₹${h.per_patient_daily_rate}` : "not set"}</div>
+                <div className="text-sm text-ink/50 capitalize">{h.contract_status}</div>
               </div>
               <div className="flex gap-3">
                 <button onClick={() => setShowNewPatientFor(showNewPatientFor === h.id ? null : h.id)} className="text-xs font-semibold text-violet">
@@ -702,6 +702,13 @@ function HospitalsTab({ hospitals, onChanged, onCaseCreated }) {
                 </button>
               </div>
             </div>
+            {/* This was previously a plain read-only line — the backend has
+                always supported PATCH .../hospitals/{id} to change the rate,
+                but nothing in this screen ever called it. That meant the
+                per-patient daily fee could only ever be set once, at the
+                moment a hospital is first created, with no way to renegotiate
+                it later without going into the database directly. */}
+            <RateEditor hospital={h} onChanged={onChanged} />
             {showNewPatientFor === h.id && (
               <NewPatientCaseForm
                 hospitalId={h.id}
@@ -713,6 +720,74 @@ function HospitalsTab({ hospitals, onChanged, onCaseCreated }) {
         ))}
       </div>
     </div>
+  );
+}
+
+// The fee ROSKYRO charges THIS hospital per patient per day. Every new
+// patient case snapshots the rate in effect at the moment it's opened (see
+// backend create_patient_case), so changing it here only affects cases
+// opened after the change — it does not retroactively alter what's already
+// been billed or is mid-stay.
+function RateEditor({ hospital: h, onChanged }) {
+  const [editing, setEditing] = useState(false);
+  const [rate, setRate] = useState(h.per_patient_daily_rate ?? "");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  async function save(e) {
+    e.preventDefault();
+    setError("");
+    setSaving(true);
+    try {
+      await api.patch(`/admin/hospital-program/hospitals/${h.id}`, {
+        per_patient_daily_rate: rate === "" ? null : Number(rate),
+      });
+      setEditing(false);
+      onChanged();
+    } catch (err) {
+      setError(err.response?.data?.detail || "Could not save the rate.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!editing) {
+    return (
+      <div className="flex items-center gap-3 text-sm text-ink/50 mt-1">
+        <span>
+          Per-patient daily rate:{" "}
+          {h.per_patient_daily_rate != null ? (
+            <span className="font-semibold text-ink">₹{h.per_patient_daily_rate}/day</span>
+          ) : (
+            <span className="text-clay font-semibold">not set — new patient cases will be blocked</span>
+          )}
+        </span>
+        <button onClick={() => setEditing(true)} className="text-xs font-semibold text-violet hover:underline">
+          {h.per_patient_daily_rate != null ? "Edit rate" : "Set rate"}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={save} className="flex flex-wrap items-end gap-2 mt-2">
+      <label className="text-xs text-ink/50">
+        Per-patient daily rate (₹)
+        <input
+          type="number" min="0" step="1" autoFocus
+          value={rate} onChange={(e) => setRate(e.target.value)}
+          placeholder="e.g. 499"
+          className="block mt-1 text-sm border border-ink/15 rounded-lg px-2 py-1.5 w-32"
+        />
+      </label>
+      <button disabled={saving} className="text-xs font-semibold px-3 py-1.5 rounded-full bg-violet text-white disabled:opacity-60">
+        {saving ? "Saving…" : "Save"}
+      </button>
+      <button type="button" onClick={() => { setEditing(false); setRate(h.per_patient_daily_rate ?? ""); setError(""); }} className="text-xs font-semibold px-3 py-1.5 rounded-full bg-ink/10 text-ink/60">
+        Cancel
+      </button>
+      {error && <p className="text-xs text-clay w-full">{error}</p>}
+    </form>
   );
 }
 
