@@ -14,7 +14,7 @@ from app.db.session import Base, engine
 from app.db.migrate import sync_missing_columns, sync_missing_enum_values
 from app.routers import (
     auth, agents, misc, admin, membership, priority_access, officer,
-    hospitals, hospital_admin,
+    hospitals, hospital_admin, doctor,
 )
 
 logger = logging.getLogger("roskyro")
@@ -78,6 +78,7 @@ app.include_router(admin.router, prefix="/api")
 app.include_router(membership.router, prefix="/api")
 app.include_router(priority_access.router, prefix="/api")
 app.include_router(officer.router, prefix="/api")
+app.include_router(doctor.router, prefix="/api")
 app.include_router(hospitals.public_router, prefix="/api")
 app.include_router(hospitals.router, prefix="/api")
 app.include_router(hospital_admin.router, prefix="/api")
@@ -130,6 +131,19 @@ if os.path.isdir(STATIC_DIR):
         inside_static = candidate == STATIC_ROOT or candidate.startswith(STATIC_ROOT + os.sep)
         if full_path and inside_static and os.path.isfile(candidate):
             return FileResponse(candidate)
+
+        # A path that LOOKS like a static asset (has a file extension, e.g.
+        # /assets/index-abc123.js or /favicon.ico) but wasn't found above is a
+        # real 404 — a stale hashed filename after a redeploy, a typo'd image
+        # path, etc. Falling through to index.html here used to return 200
+        # HTML for a request the browser made expecting JS/CSS, so a stale
+        # cached page failed with a confusing MIME/parse error instead of a
+        # clean 404 the browser (or a service worker) could react to.
+        last_segment = full_path.rsplit("/", 1)[-1]
+        looks_like_asset = "." in last_segment
+        if looks_like_asset:
+            raise HTTPException(status_code=404, detail="Not found")
+
         # Anything else (/, /login, /my-bookings, /admin, deep links, refreshes)
         # falls back to index.html so React Router can take over client-side.
         return FileResponse(os.path.join(STATIC_ROOT, "index.html"))

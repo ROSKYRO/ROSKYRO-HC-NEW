@@ -1,28 +1,29 @@
-import random
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.core.deps import get_current_user
 from app.models.user import User
 from app.models.membership import (
-    Membership, MembershipPlan, MembershipStatus, PLAN_ANNUAL_PRICE, PLAN_MAX_FAMILY_MEMBERS,
+    Membership, MembershipStatus, PLAN_MAX_FAMILY_MEMBERS,
     FamilyMember, CareRequest, CareRequestCategory, CareRequestStatus,
     CareDocument, CareDocumentStatus, TransportRequest, TransportStatus,
-    MembershipInvoice, InvoiceStatus,
+    MembershipInvoice, InvoiceStatus, MembershipInquiry,
 )
-from app.services.membership_quota import relationship_officer_quota_status
+from app.services.membership_quota import (
+    relationship_officer_quota_status, doctor_consultation_quota_status,
+)
 from app.schemas.membership import (
-    MembershipSignupIn, MembershipOut,
+    MembershipInquiryIn, MembershipInquiryOut, MembershipOut,
     FamilyMemberIn, FamilyMemberOut,
     CareRequestIn, CareRequestOut,
     CareDocumentIn, CareDocumentOut,
     TransportRequestIn, TransportRequestOut,
     MembershipInvoiceOut, MemberDashboardOut, RelationshipOfficerQuotaOut,
+    DoctorConsultationQuotaOut,
 )
 
 router = APIRouter(prefix="/membership", tags=["membership"])
@@ -35,64 +36,25 @@ def _get_membership(db: Session, user: User) -> Membership:
     return membership
 
 
-def _generate_member_code(db: Session) -> str:
-    """A bare random RM-xxxxx collides roughly once in every few thousand
-    members, and member_code is UNIQUE — which used to surface as a raw 500 on
-    the customer's signup. Retry against the DB, then fall back to a wider
-    range that cannot realistically clash."""
-    for _ in range(10):
-        code = f"RM-{random.randint(10000, 99999)}"
-        if not db.query(Membership).filter(Membership.member_code == code).first():
-            return code
-    return f"RM-{random.randint(1000000, 9999999)}"
+# ---------- Inquiry ----------
+# Public, no login required — there is no fixed membership fee to charge
+# up front (doctor specialization and the member's actual care needs both
+# move the price), so signing up no longer creates a priced Membership +
+# invoice on the spot. This just captures the lead; a concierge calls back,
+# and an admin creates the actual Membership by hand (POST
+# /admin/memberships/quick-add) once a price is agreed.
 
-
-# ---------- Signup ----------
-
-@router.post("/signup", response_model=MembershipOut)
-def signup(payload: MembershipSignupIn, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
-    if db.query(Membership).filter(Membership.user_id == user.id).first():
-        raise HTTPException(status_code=400, detail="This account already has a ROSKYRO Concierge membership.")
-
-    try:
-        plan = MembershipPlan(payload.plan)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Unknown plan. Choose care, family or nri.")
-
-    price = PLAN_ANNUAL_PRICE[plan]
-    now = datetime.utcnow()
-
-    membership = Membership(
-        member_code=_generate_member_code(db),
-        user_id=user.id,
-        plan=plan,
-        status=MembershipStatus.pending,  # flips to active once the first invoice is marked paid by admin
-        annual_price_snapshot=price,
-        started_at=now,
-        next_billing_date=now + timedelta(days=365),
+@router.post("/inquire", response_model=MembershipInquiryOut)
+def inquire(payload: MembershipInquiryIn, db: Session = Depends(get_db)):
+    inquiry = MembershipInquiry(
+        full_name=payload.full_name,
+        phone=payload.phone,
+        message=payload.message,
     )
-    db.add(membership)
-    db.flush()  # get membership.id before creating the invoice
-
-    invoice = MembershipInvoice(
-        membership_id=membership.id,
-        period_start=now,
-        period_end=now + timedelta(days=365),
-        amount=price,
-        status=InvoiceStatus.pending,
-    )
-    db.add(invoice)
-    try:
-        db.commit()
-    except IntegrityError:
-        # Two membership signups racing on the same account/member code.
-        db.rollback()
-        raise HTTPException(
-            status_code=400,
-            detail="Could not complete the signup — please try again.",
-        )
-    db.refresh(membership)
-    return membership
+    db.add(inquiry)
+    db.commit()
+    db.refresh(inquiry)
+    return inquiry
 
 
 @router.get("/me", response_model=MemberDashboardOut)
@@ -151,6 +113,36 @@ def my_relationship_officer_quota(db: Session = Depends(get_db), user: User = De
         quota=quota_status["quota"],
         used=quota_status["used"],
         remaining=quota_status["remaining"],
+        unlimited=quota_status["unlimited"],
+        usage_flag=quota_status["usage_flag"],
+        period_end=quota_status["period_end"],
+    )
+
+
+@router.get("/doctor-consultation-quota", response_model=DoctorConsultationQuotaOut)
+def my_doctor_consultation_quota(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    """How many of this year's bundled consultations with the member's
+    concierge doctor remain. Meaningful for the doctor_concierge plan;
+    returns 0/0 (not an error) for a member on a plan with no doctor
+    consultation allowance, same non-member-safe pattern as the
+    Relationship Officer quota above."""
+    membership = db.query(Membership).filter(Membership.user_id == user.id).first()
+    if not membership:
+        return DoctorConsultationQuotaOut(is_member=False)
+
+    if membership.status != MembershipStatus.active:
+        return DoctorConsultationQuotaOut(is_member=True, plan=membership.plan.value, status=membership.status.value)
+
+    quota_status = doctor_consultation_quota_status(membership, db)
+    return DoctorConsultationQuotaOut(
+        is_member=True,
+        plan=membership.plan.value,
+        status=membership.status.value,
+        quota=quota_status["quota"],
+        used=quota_status["used"],
+        remaining=quota_status["remaining"],
+        unlimited=quota_status["unlimited"],
+        usage_flag=quota_status["usage_flag"],
         period_end=quota_status["period_end"],
     )
 

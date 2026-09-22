@@ -4,11 +4,32 @@ from typing import Optional, List
 
 from pydantic import BaseModel, Field
 
+from app.schemas.doctor import DoctorOut
 
-# ---------- Signup ----------
 
-class MembershipSignupIn(BaseModel):
-    plan: str = Field(..., description="care | family | nri")
+# ---------- Inquiry (replaces the old instant priced signup) ----------
+# There is no fixed membership fee: the doctor's specialization and the
+# member's actual care needs both move the price. A prospective member
+# submits this instead of paying anything up front; a concierge calls them
+# back, and an admin creates the priced Membership by hand once the fee is
+# agreed (see AdminMembershipQuickAddIn.annual_price).
+
+class MembershipInquiryIn(BaseModel):
+    full_name: str
+    phone: str
+    message: Optional[str] = Field(
+        default=None,
+        description="What they told us they need — e.g. specialization, family member's condition/age.",
+    )
+
+
+class MembershipInquiryOut(BaseModel):
+    id: int
+    full_name: str
+    created_at: UTCDateTime
+
+    class Config:
+        from_attributes = True
 
 
 class MembershipOut(BaseModel):
@@ -19,6 +40,9 @@ class MembershipOut(BaseModel):
     annual_price_snapshot: float
     started_at: UTCDateTime
     next_billing_date: Optional[UTCDateTime] = None
+    # Populated only for the doctor_concierge plan (or any membership an
+    # admin has manually assigned a doctor to) — see Membership.assigned_doctor.
+    assigned_doctor: Optional[DoctorOut] = None
 
     class Config:
         from_attributes = True
@@ -56,6 +80,11 @@ class CareRequestOut(BaseModel):
     id: int
     family_member_id: Optional[int] = None
     category: str
+    # "member" (the customary self-raised ticket) or "doctor_referral" — set
+    # when the concierge desk logs a referral the member's doctor made
+    # during a consultation. See AdminCareRequestQuickAddIn for how the
+    # latter gets created (admin can't be set by the member themselves).
+    origin: str
     title: str
     description: Optional[str] = None
     status: str
@@ -136,9 +165,29 @@ class RelationshipOfficerQuotaOut(BaseModel):
     is_member: bool
     plan: Optional[str] = None
     status: Optional[str] = None  # membership status; quota only actually applies when this is "active"
-    quota: int = 0
+    quota: Optional[int] = 0  # None = unlimited (currently only doctor_concierge) — see models/membership.py
     used: int = 0
-    remaining: int = 0
+    remaining: Optional[int] = 0  # None when quota is unlimited
+    unlimited: bool = False
+    usage_flag: bool = False  # informational only — never blocks anything, see membership_quota.py
+    period_end: Optional[UTCDateTime] = None
+
+
+# ---------- Doctor consultation quota (doctor_concierge plan) ----------
+# Same shape as RelationshipOfficerQuotaOut, kept as a separate class rather
+# than reused because the two quotas reset on different cycles (monthly vs
+# annual — see membership_quota.py) and covering completely different plan
+# fields under one name would be confusing on the wire.
+
+class DoctorConsultationQuotaOut(BaseModel):
+    is_member: bool
+    plan: Optional[str] = None
+    status: Optional[str] = None
+    quota: Optional[int] = 0  # None = unlimited (doctor_concierge) — see models/membership.py
+    used: int = 0
+    remaining: Optional[int] = 0  # None when quota is unlimited
+    unlimited: bool = False
+    usage_flag: bool = False  # informational only — never blocks anything, see membership_quota.py
     period_end: Optional[UTCDateTime] = None
 
 

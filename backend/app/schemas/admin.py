@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 from app.schemas.utc_types import UTCDateTime
 
 from app.models.complaint import ComplaintCategory, ComplaintStatus
@@ -16,6 +16,16 @@ class CustomerOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class CustomerUpdateIn(BaseModel):
+    """All fields optional — send just the ones you're changing. Phone/email
+    are re-checked for uniqueness against other users before saving."""
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    preferred_language: Optional[str] = None
+    is_active: Optional[bool] = None
 
 
 class ComplaintOut(BaseModel):
@@ -79,8 +89,20 @@ class AdminMembershipOut(BaseModel):
     customer_name: str
     customer_phone: str
     family_member_count: int
-    relationship_officer_visits_quota: int = 0
+    relationship_officer_visits_quota: Optional[int] = 0  # None = unlimited (doctor_concierge)
     relationship_officer_visits_used: int = 0
+    relationship_officer_visits_unlimited: bool = False
+    # Doctor + Healthcare Concierge Membership fields — null for members on
+    # any of the other three plans.
+    assigned_doctor_id: Optional[int] = None
+    assigned_doctor_name: Optional[str] = None
+    doctor_consultations_quota: Optional[int] = 0  # None = unlimited (doctor_concierge)
+    doctor_consultations_used: int = 0
+    doctor_consultations_unlimited: bool = False
+    # True once an unlimited member's usage crosses the fair-use soft
+    # threshold (PLAN_FAIR_USE_SOFT_THRESHOLD_CONSULTATIONS) — informational
+    # only, never blocks anything. See membership_quota.py.
+    doctor_consultations_usage_flag: bool = False
 
     class Config:
         from_attributes = True
@@ -88,6 +110,67 @@ class AdminMembershipOut(BaseModel):
 
 class AdminMembershipStatusIn(BaseModel):
     status: str = Field(..., pattern="^(pending|active|paused|cancelled|expired)$")
+
+
+class AdminAssignDoctorIn(BaseModel):
+    doctor_id: int
+    force: bool = False  # override the capacity warning (see doctor_roster.py)
+
+
+class AdminDoctorReferralIn(BaseModel):
+    """Concierge desk logs a coordination request the member's doctor
+    referred them for during a consultation — used when the doctor reports
+    it by phone/WhatsApp rather than logging it themselves through their own
+    portal (routers/doctor.py, same effect)."""
+    membership_id: int
+    category: str = "other"
+    title: str
+    description: Optional[str] = None
+    family_member_id: Optional[int] = None
+
+
+class AdminLogConsultationIn(BaseModel):
+    """Concierge desk logs a doctor consultation on the doctor's behalf
+    (phone/WhatsApp-reported) — counts against the member's annual
+    doctor_concierge allowance exactly like one the doctor logs themselves
+    through their own portal. See models.membership.DoctorConsultation."""
+    membership_id: int
+    note: Optional[str] = None
+    occurred_at: Optional[UTCDateTime] = None
+
+
+# ---------------------------------------------------------------------------
+# Admin Care Requests board — every coordination ticket across every
+# member, in one place, same shape/spirit as the Complaints board above.
+# The member-facing GET/POST/cancel (routers/membership.py's own
+# /care-requests) already existed for a member to see and raise their own
+# tickets; this is the admin side that was missing — see one place to
+# triage everything (including the doctor-referral ones the concierge desk
+# or a doctor logs), filter it, and move it through status.
+# ---------------------------------------------------------------------------
+
+class AdminCareRequestOut(BaseModel):
+    id: int
+    membership_id: int
+    member_code: str
+    customer_name: str
+    customer_phone: str
+    plan: str
+    family_member_id: Optional[int] = None
+    family_member_name: Optional[str] = None
+    category: str
+    origin: str
+    title: str
+    description: Optional[str] = None
+    status: str
+    concierge_notes: Optional[str] = None
+    created_at: UTCDateTime
+    resolved_at: Optional[UTCDateTime] = None
+
+
+class AdminCareRequestUpdateIn(BaseModel):
+    status: Optional[str] = Field(None, pattern="^(open|in_progress|resolved|cancelled)$")
+    concierge_notes: Optional[str] = None
 
 
 class AdminInvoiceOut(BaseModel):
@@ -252,7 +335,12 @@ class AdminAppointmentQuickAddIn(BaseModel):
 class AdminMembershipQuickAddIn(BaseModel):
     full_name: str
     phone: str
-    plan: str = Field(..., pattern="^(care|family|nri)$")
+    plan: str = Field(..., pattern="^(doctor_concierge)$")
+    # There is no fixed membership fee — the doctor's specialization and the
+    # member's actual care needs move the price, so the admin enters
+    # whatever was agreed with the member on the call, per-member, every
+    # time. See app/models/membership.py.
+    annual_price: float = Field(..., gt=0, description="Annual fee agreed with the member on the call.")
     mark_as_paid: bool = True   # ROSKYRO already collected payment over WhatsApp/UPI
 
 
@@ -261,5 +349,52 @@ class AdminMembershipQuickAddOut(BaseModel):
     account_created: bool
     temp_password: Optional[str] = None  # only returned when a new account was created — share with the member once
 
+
+# ---------- Membership inquiries (leads from the public "Enquire" form) ----------
+
+class AdminMembershipInquiryOut(BaseModel):
+    id: int
+    full_name: str
+    phone: str
+    message: Optional[str] = None
+    status: str
+    concierge_notes: Optional[str] = None
+    created_at: UTCDateTime
+
+    class Config:
+        from_attributes = True
+
+
+class AdminMembershipInquiryUpdateIn(BaseModel):
+    status: str = Field(..., pattern="^(new|contacted|converted|closed)$")
+    concierge_notes: Optional[str] = None
+
+
+# ============================================================================
+# TODAY'S ACTION ITEMS — one combined widget summarising the four things the
+# weekly/daily admin routine already checks by hand across separate tabs:
+# discharge alerts, pending invoices (membership + hospital), new membership
+# leads, and doctors near/over their member capacity. Built entirely from
+# existing endpoints' underlying data — no new tables.
+# ============================================================================
+
+class ActionItemDoctorOut(BaseModel):
+    id: int
+    full_name: str
+    assigned_member_count: int
+    max_members: Optional[int] = None
+    over_capacity: bool = False
+
+
+class ActionItemsOut(BaseModel):
+    discharge_alerts_count: int
+    discharge_alerts_critical_count: int
+    pending_membership_invoices_count: int
+    pending_membership_invoices_amount: float
+    pending_hospital_invoices_count: int
+    pending_hospital_invoices_amount: float
+    new_membership_inquiries_count: int
+    doctors_near_or_over_capacity: List[ActionItemDoctorOut]
+    total_action_items: int
 
 

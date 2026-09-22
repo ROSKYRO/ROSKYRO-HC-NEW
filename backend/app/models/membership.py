@@ -8,9 +8,13 @@ from app.db.session import Base
 
 
 class MembershipPlan(str, enum.Enum):
-    care = "care"        # Individual, Rs 24,999/year
-    family = "family"    # Up to 4 members, Rs 59,999/year
-    nri = "nri"          # NRI Care (abroad family + parents in India), Rs 99,999/year
+    # "ROSKYRO Doctor + Healthcare Concierge Membership" — the only plan
+    # ROSKYRO offers. A member on this plan gets a dedicated concierge
+    # doctor (Membership.assigned_doctor) who owns the clinical
+    # relationship; ROSKYRO coordinates everything the doctor refers them
+    # to. See app/models/doctor.py and PLAN_DOCTOR_CONSULTATIONS_PER_YEAR
+    # below for the consultation allowance this plan bundles.
+    doctor_concierge = "doctor_concierge"
 
 
 class MembershipStatus(str, enum.Enum):
@@ -21,58 +25,107 @@ class MembershipStatus(str, enum.Enum):
     expired = "expired"    # billing lapsed and grace period passed
 
 
-# All plans are billed annually.
-PLAN_ANNUAL_PRICE = {
-    MembershipPlan.care: 24999.0,
-    MembershipPlan.family: 59999.0,
-    MembershipPlan.nri: 99999.0,
-}
+# Billed annually. There is deliberately NO fixed price dict for this plan:
+# the doctor's specialization and the member's actual care needs both move
+# the fee, so a flat number here would be wrong more often than right.
+# Instead, a prospective member submits a MembershipInquiry (see below), a
+# concierge understands their need over a call, and an admin enters the
+# agreed price by hand on Membership.annual_price_snapshot when the
+# membership is actually created (POST /admin/memberships/quick-add — see
+# AdminMembershipQuickAddIn.annual_price in schemas/admin.py). Limits below
+# are still placeholders in the same spirit as before.
 
 PLAN_MAX_FAMILY_MEMBERS = {
-    MembershipPlan.care: 1,
-    MembershipPlan.family: 4,
-    MembershipPlan.nri: 4,
+    # Individual-only for the initial launch of this plan — the business
+    # description centers on "the member" and their one doctor. Raise this
+    # if ROSKYRO wants a family variant of the doctor-led plan later.
+    MembershipPlan.doctor_concierge: 1,
 }
 
 # Free ROSKYRO Relationship Officer visits — quota resets every calendar
 # month (see services/membership_quota.py), independent of the annual
 # billing cycle above.
 PLAN_FREE_ASSIST_VISITS = {
-    MembershipPlan.care: 2,
-    MembershipPlan.family: 5,
-    MembershipPlan.nri: 8,
+    # "No hourly billing for concierge assistance... unlimited concierge
+    # coordination under the membership's fair-use policy" — no hard
+    # numeric cap here. None means "no ceiling", not "zero" — see
+    # PLAN_FAIR_USE_SOFT_THRESHOLD_VISITS below for how fair-use is enforced
+    # without one, and membership_quota.py for how a None quota is handled.
+    MembershipPlan.doctor_concierge: None,
 }
 
-# Annual allowances bundled into each plan (reset once a year, with the
+# Annual allowances bundled into the plan (reset once a year, with the
 # membership's billing cycle — unlike the Relationship Officer visit quota above).
 PLAN_DOCTOR_CONSULTATIONS_PER_YEAR = {
-    MembershipPlan.care: 4,
-    MembershipPlan.family: 8,
-    MembershipPlan.nri: 12,
+    # "Priority doctor access" + unlimited coordination: no hard cap.
+    MembershipPlan.doctor_concierge: None,
+}
+
+# ---------------------------------------------------------------------------
+# Fair-use soft thresholds — ONLY meaningful for a plan whose quota above is
+# None (currently doctor_concierge). These never block a member from
+# anything and never appear as a hard denial anywhere in the API; they only
+# set `usage_flag=True` on that plan's quota-status dict once usage in the
+# current period crosses the number, so the concierge desk sees "this looks
+# unusual" and can have a human conversation — never an automatic cutoff.
+# ---------------------------------------------------------------------------
+PLAN_FAIR_USE_SOFT_THRESHOLD_VISITS = {
+    MembershipPlan.doctor_concierge: 20,  # /month
+}
+PLAN_FAIR_USE_SOFT_THRESHOLD_CONSULTATIONS = {
+    MembershipPlan.doctor_concierge: 40,  # /year
 }
 
 PLAN_AMBULANCE_ASSISTS_PER_YEAR = {
-    MembershipPlan.care: 2,
-    MembershipPlan.family: 4,
-    MembershipPlan.nri: 6,
+    MembershipPlan.doctor_concierge: 4,
 }
 
 PLAN_MEDICAL_TRAVEL_ASSISTS_PER_YEAR = {
-    MembershipPlan.care: 2,
-    MembershipPlan.family: 4,
-    MembershipPlan.nri: 6,
+    # "Medical travel coordination when required" is explicitly called out
+    # for this plan.
+    MembershipPlan.doctor_concierge: 6,
 }
 
 # Frequent Care needs — dialysis, regular physiotherapy, recurring hospital
 # visits, BP/diabetes check-ups, etc. — are not covered by the fixed annual
 # allowances above. They are handled through the standard hourly Relationship
-# Officer booking system, and this applies across every plan (Care, Family,
-# and NRI Care alike).
+# Officer booking system.
 FREQUENT_CARE_NOTE = (
     "Frequent Care needs — dialysis, regular physiotherapy, recurring hospital "
     "visits, BP/diabetes check-ups, and similar recurring needs — are covered "
-    "through the standard hourly booking system, applicable across all plans."
+    "through the standard hourly booking system."
 )
+
+
+class InquiryStatus(str, enum.Enum):
+    new = "new"                # just submitted, nobody has called them yet
+    contacted = "contacted"    # concierge has spoken to them, discussing need/price
+    converted = "converted"    # became an actual Membership (see AdminMembershipInquiryUpdateIn)
+    closed = "closed"          # not proceeding
+
+
+class MembershipInquiry(Base):
+    """A lead from the public 'Enquire' form — deliberately NOT a priced
+    signup. Doctor specialization and the member's actual care needs both
+    move the fee, so we never quote or charge a number here. A concierge
+    calls the person back, understands what they need, and — once a price
+    is agreed — an admin turns this into a real Membership by hand via
+    POST /admin/memberships/quick-add, entering that agreed price there.
+    This row is left as status=converted afterwards for the record; it is
+    never itself billed."""
+    __tablename__ = "membership_inquiries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    full_name = Column(String, nullable=False)
+    phone = Column(String, nullable=False)
+    # What they told us they need — e.g. "cardiologist for my father, 70,
+    # diabetic" — used purely to prep the callback, never priced off of
+    # automatically.
+    message = Column(Text, nullable=True)
+    status = Column(Enum(InquiryStatus), default=InquiryStatus.new, nullable=False)
+    concierge_notes = Column(Text, nullable=True)  # internal — call outcome, price discussed, etc.
+
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class Membership(Base):
@@ -88,6 +141,9 @@ class Membership(Base):
     plan = Column(Enum(MembershipPlan), nullable=False)
     status = Column(Enum(MembershipStatus), default=MembershipStatus.pending, nullable=False)
 
+    # Capacity is enforced in app/services/doctor_roster.py, not here.
+    assigned_doctor_id = Column(Integer, ForeignKey("doctors.id"), nullable=True)
+
     annual_price_snapshot = Column(Float, nullable=False)  # locked in at signup, unaffected by future price changes
     started_at = Column(DateTime, default=datetime.utcnow)
     next_billing_date = Column(DateTime, nullable=True)  # annual renewal date
@@ -97,11 +153,13 @@ class Membership(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User")
+    assigned_doctor = relationship("Doctor", back_populates="memberships")
     family_members = relationship("FamilyMember", back_populates="membership", cascade="all, delete-orphan")
     care_requests = relationship("CareRequest", back_populates="membership", cascade="all, delete-orphan")
     documents = relationship("CareDocument", back_populates="membership", cascade="all, delete-orphan")
     transport_requests = relationship("TransportRequest", back_populates="membership", cascade="all, delete-orphan")
     invoices = relationship("MembershipInvoice", back_populates="membership", cascade="all, delete-orphan")
+    consultations = relationship("DoctorConsultation", back_populates="membership", cascade="all, delete-orphan")
 
 
 class FamilyMember(Base):
@@ -133,7 +191,31 @@ class CareRequestCategory(str, enum.Enum):
     diagnostic = "diagnostic"
     specialist = "specialist"
     follow_up = "follow_up"
+    # Added for the Doctor + Healthcare Concierge Membership: these cover
+    # everything the business spec says ROSKYRO coordinates once the
+    # concierge doctor refers a member onward — "admission/discharge
+    # assistance, physical assistance, ... records coordination and family
+    # updates ... medical travel coordination".
+    admission = "admission"
+    discharge = "discharge"
+    physical_assistance = "physical_assistance"
+    records = "records"
+    family_update = "family_update"
+    medical_travel = "medical_travel"
     other = "other"
+
+
+class CareRequestOrigin(str, enum.Enum):
+    # The member (or their family) raised this themselves.
+    member = "member"
+    # The concierge doctor referred the member onward during a consultation
+    # — either logged by the doctor themselves through their own no-login
+    # portal (routers/doctor.py), or by the concierge desk on the doctor's
+    # behalf over phone/WhatsApp (POST /admin/care-requests/doctor-referral,
+    # same "quick add" pattern used elsewhere in admin). Both write this
+    # same origin value; there's no way to tell which path was used from
+    # this field alone (see CareRequest — nothing else records that either).
+    doctor_referral = "doctor_referral"
 
 
 class CareRequestStatus(str, enum.Enum):
@@ -153,6 +235,7 @@ class CareRequest(Base):
     family_member_id = Column(Integer, ForeignKey("family_members.id"), nullable=True)  # null = the member themselves
 
     category = Column(Enum(CareRequestCategory), default=CareRequestCategory.other, nullable=False)
+    origin = Column(Enum(CareRequestOrigin), default=CareRequestOrigin.member, nullable=False)
     title = Column(String, nullable=False)
     # Free text, member-entered. Frontend placeholder steers members toward
     # "reason for the visit" (e.g. "follow-up visit") rather than diagnosis or
@@ -271,3 +354,34 @@ class MembershipInvoice(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     membership = relationship("Membership", back_populates="invoices")
+
+
+class DoctorConsultation(Base):
+    """One logged consultation between a member and their assigned concierge
+    doctor, on the doctor_concierge plan's annual PLAN_DOCTOR_CONSULTATIONS_PER_YEAR
+    allowance. This is the row services/membership_quota.py counts against
+    that allowance to compute real `used`/`remaining` figures — previously
+    `used` was hardcoded to 0 everywhere (see that module's history) because
+    nothing wrote usage anywhere. A row here can be logged two ways: the
+    doctor logs it themselves through their own no-login portal
+    (routers/doctor.py), or the concierge desk logs it on the doctor's
+    behalf from the admin Doctors tab (phone/WhatsApp-reported, same pattern
+    as a doctor-referral CareRequest) — `logged_by` distinguishes the two.
+    """
+    __tablename__ = "doctor_consultations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    membership_id = Column(Integer, ForeignKey("memberships.id"), nullable=False, index=True)
+    doctor_id = Column(Integer, ForeignKey("doctors.id"), nullable=False, index=True)
+
+    occurred_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    note = Column(Text, nullable=True)  # short reason/summary the doctor or concierge desk enters — not a clinical record
+
+    # "doctor_portal" (the doctor logged it themselves) or "admin" (concierge
+    # desk logged it on the doctor's behalf, phone/WhatsApp-reported).
+    logged_by = Column(String, default="admin", nullable=False)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    membership = relationship("Membership", back_populates="consultations")
+    doctor = relationship("Doctor", back_populates="consultations")

@@ -36,3 +36,10 @@ def generate_officer_token() -> str:
     PatientCase.officer_discharge_token, Agent.portal_token, and
     routers/officer.py."""
     return secrets.token_urlsafe(24)
+
+
+def generate_doctor_token() -> str:
+    """Long random token for a concierge doctor's no-login portal link —
+    same pattern as generate_officer_token(), see Doctor.portal_token and
+    routers/doctor.py."""
+    return secrets.token_urlsafe(24)

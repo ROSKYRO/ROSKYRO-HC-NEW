@@ -24,6 +24,7 @@ from app.models.city import City
 from app.models.user import User, UserRole
 from app.models.hospital import Hospital, HospitalContractStatus
 from app.models.patient_case import PatientCase
+from app.models.doctor import Doctor
 from app.core.security import hash_password
 from app.core.config import settings
 
@@ -125,6 +126,24 @@ def _seed_demo_hospital(db) -> None:
     )
 
 
+def _seed_demo_doctor(db) -> None:
+    """Opt-in only (SEED_DEMO_DATA=true) and never in production: one
+    concierge doctor so the Doctor + Healthcare Concierge Membership has
+    someone to assign on a local walkthrough."""
+    if not settings.SEED_DEMO_DATA or settings.is_production:
+        return
+    if db.query(Doctor).first():
+        return
+    db.add(Doctor(
+        full_name="Anjali Mehta",
+        specialty="Internal Medicine",
+        qualification="MBBS, MD",
+        contact_phone="9999999995",
+        bio="Demo concierge doctor — assign or reassign from Admin > Doctors.",
+        max_members=40,
+    ))
+
+
 def _apply_admin_reset(db) -> None:
     """One-time reset hook: when ADMIN_RESET_PHONE / ADMIN_RESET_PASSWORD are
     set, overwrite the existing admin's credentials on boot. Set them, deploy,
@@ -158,6 +177,7 @@ def run():
         _seed_cities(db)
         _seed_admin(db)
         _seed_demo_hospital(db)
+        _seed_demo_doctor(db)
         db.commit()
         _apply_admin_reset(db)
         logger.info("Seed complete.")
