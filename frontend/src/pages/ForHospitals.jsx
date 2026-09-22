@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import {
   Users, UserCheck, HeartHandshake, MessageCircle, MessageSquare, Sparkles, Wallet,
   ClipboardCheck, ArrowRight, Building, CheckCircle2, ShieldCheck, Mail, Send,
-  AlertTriangle, Stethoscope, Crown, Ambulance, PhoneCall, Lock, FileCheck2, Quote
+  AlertTriangle, Stethoscope, Crown, Ambulance, PhoneCall, Lock, FileCheck2, Quote,
+  ClipboardList, Building2
 } from "lucide-react";
 import { BRAND, SUPPORT_EMAIL, SUPPORT_PHONE_DISPLAY, HOSPITAL_WA_LINK } from "../config";
 import useSEO from "../hooks/useSEO";
@@ -96,15 +97,45 @@ const PROBLEMS = [
 ];
 
 const COORDINATION_QUESTIONS = [
-  "“Doctor कब आएंगे?”",
-  "“Report आई?”",
-  "“Test कहां होगा?”",
-  "“Billing में क्या करना है?”",
-  "“Discharge कब होगा?”",
-  "“Family को क्या update दें?”",
-  "“दूसरे department में कैसे जाएं?”",
-  "“Ambulance arrange करनी है”",
-  "“Relative बार-बार फोन कर रहे हैं”",
+  "“When will the doctor arrive?”",
+  "“Is the report ready?”",
+  "“Where do I need to go for the test?”",
+  "“What do I need to do for billing?”",
+  "“When will the discharge happen?”",
+  "“Who will update the family?”",
+  "“How do I reach another department?”",
+  "“Can someone arrange an ambulance?”",
+];
+
+const COORDINATION_BURDEN_ITEMS = [
+  { icon: MessageCircle, text: "Patient & family communication" },
+  { icon: Stethoscope, text: "Doctor & department coordination" },
+  { icon: ClipboardList, text: "Reports & diagnostics follow-up" },
+  { icon: ShieldCheck, text: "Admission & discharge coordination" },
+  { icon: Wallet, text: "Billing-related assistance" },
+  { icon: Building2, text: "Movement between departments" },
+  { icon: Ambulance, text: "Ambulance & transport coordination" },
+  { icon: PhoneCall, text: "Family updates and repeated enquiries" },
+];
+
+const YOUR_HOSPITAL_ROLE = [
+  "Clinical treatment",
+  "Doctors & medical teams",
+  "Procedures & interventions",
+  "Medical decisions",
+  "In-hospital care",
+];
+
+const YOUR_ROSKYRO_TEAM = [
+  "Patient & family assistance",
+  "Doctor appointment coordination",
+  "Specialist coordination",
+  "Diagnostics coordination",
+  "Admission & discharge assistance",
+  "Hospital navigation",
+  "Family & NRI updates",
+  "Ambulance / medical travel coordination",
+  "Reasonable physical assistance",
 ];
 
 const RO_RESPONSIBILITIES = [
@@ -290,46 +321,142 @@ export default function ForHospitals() {
         </div>
       </div>
 
-      {/* The real FAT: Hospital's hidden coordination burden */}
+      {/* The Problem Behind Every Patient */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-20">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="text-xs font-bold tracking-widest uppercase text-clay">The Problem</span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-3">
+            The Problem Behind Every Patient
+          </h2>
+          <p className="text-ink-muted text-sm sm:text-base leading-relaxed">
+            Treating a patient is not the only thing a hospital has to manage. Every patient comes with a layer of
+            coordination beyond the actual treatment.
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+          {COORDINATION_QUESTIONS.map((q) => (
+            <div key={q} className="flex items-center gap-2.5 bg-clay/5 border border-clay/20 rounded-xl p-3.5">
+              <PhoneCall className="w-4 h-4 text-clay shrink-0" />
+              <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">{q}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="max-w-3xl mx-auto text-center space-y-2">
+          <p className="text-ink-muted text-xs sm:text-sm leading-relaxed">
+            For one patient, these may seem like small requests.
+          </p>
+          <p className="text-ink text-sm sm:text-base font-semibold leading-relaxed">
+            But when a hospital is managing hundreds of patients, these small coordination tasks become a significant
+            operational burden for the hospital staff.
+          </p>
+        </div>
+      </div>
+
+      {/* The hidden burden of hospital care */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-14">
         <div className="bg-ink text-white rounded-3xl p-6 sm:p-10 relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-violet-500/20 via-transparent to-transparent pointer-events-none"></div>
 
           <div className="relative z-10">
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <span className="text-xs font-bold tracking-widest uppercase text-flare">असली FAT</span>
+              <span className="text-xs font-bold tracking-widest uppercase text-flare">The Hidden Burden</span>
               <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold mt-2 mb-3">
-                Hospital का “Coordination Burden”
+                The Hidden Burden of Hospital Care
               </h2>
               <p className="text-white/70 text-sm sm:text-base leading-relaxed">
-                Hospital का hidden cost = <span className="text-white font-semibold">Patient Coordination Complexity</span>
+                The hidden cost of a hospital is <span className="text-white font-semibold">Patient Coordination Complexity</span>.
               </p>
               <p className="text-white/60 text-xs sm:text-sm leading-relaxed mt-2">
-                Hospital को हर patient के लिए अलग-अलग चीजों में staff time देना पड़ता है:
+                Alongside clinical care, hospital staff constantly have to coordinate:
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 mb-10">
-              {COORDINATION_QUESTIONS.map((q) => (
-                <div key={q} className="flex items-center gap-2.5 bg-white/5 border border-white/10 rounded-xl p-3.5">
-                  <PhoneCall className="w-4 h-4 text-flare shrink-0" />
-                  <p className="text-xs sm:text-sm text-white/80 leading-relaxed">{q}</p>
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+              {COORDINATION_BURDEN_ITEMS.map(({ icon: Icon, text }) => (
+                <div key={text} className="flex items-start gap-2.5 bg-white/5 border border-white/10 rounded-xl p-3.5">
+                  <Icon className="w-4 h-4 text-flare shrink-0 mt-0.5" />
+                  <p className="text-xs sm:text-sm text-white/80 leading-relaxed">{text}</p>
                 </div>
               ))}
             </div>
 
             <div className="max-w-3xl mx-auto text-center space-y-3">
               <p className="text-white/70 text-xs sm:text-sm leading-relaxed">
-                Hospital इस सबके लिए अलग-अलग software खरीद सकता है।
+                Hospitals can use software and systems to improve many of these processes. But software alone cannot
+                solve every coordination problem.
               </p>
               <p className="text-white/70 text-xs sm:text-sm leading-relaxed">
-                लेकिन software अकेले <span className="text-white font-semibold">physical coordination + human trust + family communication</span> solve नहीं करता।
+                Because in healthcare, patients often need more than information. They need: someone who understands
+                their situation, coordinates with the right people, helps when physical assistance is needed, and
+                keeps the family informed.
               </p>
               <p className="text-flare text-sm sm:text-base font-bold pt-2">
-                और यही ROSKYRO solve करता है।
+                This is where ROSKYRO comes in.
+              </p>
+              <p className="text-white/80 text-xs sm:text-sm leading-relaxed pt-2">
+                Your hospital takes care of the treatment. ROSKYRO takes care of the coordination around it.
+                ROSKYRO acts as a human coordination layer between the hospital, the patient and the family.
               </p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Your Hospital vs Your ROSKYRO Coordination Team */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="text-xs font-bold tracking-widest uppercase text-violet-600">Clear Division of Work</span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-3">
+            Your Hospital Stays Focused on Care. We Handle the Coordination.
+          </h2>
+          <p className="text-ink-muted text-sm sm:text-base leading-relaxed">
+            Your hospital can stay focused on clinical care and treatment. ROSKYRO helps manage the coordination
+            around that care.
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-5">
+          <div className="bg-white border border-ink/10 rounded-2xl p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Stethoscope className="w-5 h-5 text-ink" />
+              <h3 className="font-bold text-ink text-sm sm:text-base">Your Hospital</h3>
+            </div>
+            <ul className="space-y-2.5">
+              {YOUR_HOSPITAL_ROLE.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-xs sm:text-sm text-ink-muted">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-ink/60 shrink-0 mt-0.5" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-white border border-violet-200 rounded-2xl p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <HeartHandshake className="w-5 h-5 text-violet-600" />
+              <h3 className="font-bold text-ink text-sm sm:text-base">Your ROSKYRO Coordination Team</h3>
+            </div>
+            <ul className="space-y-2.5">
+              {YOUR_ROSKYRO_TEAM.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-xs sm:text-sm text-ink-muted">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-violet-500 shrink-0 mt-0.5" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="max-w-3xl mx-auto mt-10 text-center space-y-2">
+          <p className="text-ink-muted text-xs sm:text-sm leading-relaxed">
+            So your staff can focus on care, not coordination. Patients get a dedicated coordination point. Families
+            don&rsquo;t have to repeatedly contact different departments for every small requirement. And hospital
+            staff can spend less time handling non-clinical coordination requests.
+          </p>
+          <p className="text-ink text-sm sm:text-base font-bold pt-2">
+            Let your hospital focus on treating patients. Let ROSKYRO help coordinate everything around their care.
+          </p>
         </div>
       </div>
 
