@@ -105,10 +105,10 @@ export default function MemberDashboard() {
             </div>
 
             <h1 className="font-display text-2xl sm:text-3xl font-bold text-white">
-              {membership.plan === "care" ? "ROSKYRO Solo Care" : membership.plan === "family" ? "ROSKYRO Family Concierge" : "ROSKYRO Global NRI Care"}
+              ROSKYRO Doctor + Healthcare Concierge
             </h1>
             <p className="text-xs sm:text-sm text-parchment/70 mt-1">
-              Dedicated Relationship Officer • Priority Hospital Desk • Medical Escorts
+              One Doctor. One Healthcare Concierge. Your doctor manages your health — ROSKYRO manages everything around it.
             </p>
           </div>
 
@@ -175,6 +175,9 @@ export default function MemberDashboard() {
       {/* Tab Contents */}
       {tab === "Overview" && (
         <div className="space-y-6">
+          {/* "One Membership. One Doctor. One Healthcare Concierge." */}
+          <ConciergeDoctorCard doctor={membership.assigned_doctor} memberCode={membership.member_code} />
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <SummaryCard 
               icon={Users} 
@@ -269,6 +272,88 @@ export default function MemberDashboard() {
       )}
 
       {tab === "Billing" && <BillingTab membershipId={membership.id} />}
+    </div>
+  );
+}
+
+// "One Membership. One Doctor. One Healthcare Concierge." — the flagship
+// card for the Doctor + Healthcare Concierge Membership. `doctor` is null in
+// two situations: the member just signed up for this plan and ROSKYRO
+// hasn't matched them to a doctor yet (shown as a friendly "matching in
+// progress" state, not an error), or another plan's member happens to have
+// one assigned anyway.
+function ConciergeDoctorCard({ doctor, memberCode }) {
+  const [quota, setQuota] = useState(null);
+
+  useEffect(() => {
+    api.get("/membership/doctor-consultation-quota").then((r) => setQuota(r.data)).catch(() => {});
+  }, []);
+
+  if (!doctor) {
+    return (
+      <div className="bg-violet/5 border border-violet/20 rounded-3xl p-6 flex items-center gap-4">
+        <div className="w-12 h-12 rounded-full bg-violet/15 text-violet flex items-center justify-center shrink-0">
+          <Stethoscope className="w-6 h-6" />
+        </div>
+        <div>
+          <div className="font-bold text-sm text-ink">Matching you with your concierge doctor</div>
+          <div className="text-xs text-ink/60 mt-0.5">
+            ROSKYRO is finalizing your dedicated doctor assignment — you'll see their details here shortly.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white border border-ink/10 rounded-3xl p-6 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-full bg-violet/10 text-violet flex items-center justify-center shrink-0">
+            <Stethoscope className="w-7 h-7" />
+          </div>
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-wider text-violet mb-0.5">Your Concierge Doctor</div>
+            <div className="font-display text-lg font-bold text-ink">Dr. {doctor.full_name}</div>
+            <div className="text-xs text-ink/60">
+              {doctor.specialty || "General Medicine"}{doctor.qualification ? ` · ${doctor.qualification}` : ""}
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          {doctor.whatsapp && (
+            <a
+              href={waLink(doctor.whatsapp, `Hi Dr. ${doctor.full_name}, this is ROSKYRO member ${memberCode}.`)}
+              target="_blank" rel="noreferrer"
+              className="px-4 py-2 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>Message Doctor</span>
+            </a>
+          )}
+          <a
+            href={`tel:${doctor.contact_phone}`}
+            className="px-4 py-2 rounded-full border border-ink/15 text-xs font-bold text-ink hover:bg-slate-50 flex items-center gap-1.5"
+          >
+            <PhoneCall className="w-3.5 h-3.5 text-violet" />
+            <span>Call</span>
+          </a>
+        </div>
+      </div>
+      {doctor.bio && <p className="text-xs text-ink/60 mt-3 border-t border-ink/5 pt-3">{doctor.bio}</p>}
+      {quota && quota.is_member && quota.unlimited && (
+        <p className="text-[11px] text-ink/50 mt-3">
+          {quota.used > 0
+            ? `${quota.used} consultation${quota.used === 1 ? "" : "s"} logged this year`
+            : "No consultations logged yet this year"} · Unlimited coordination, subject to fair-use policy
+        </p>
+      )}
+      {quota && quota.is_member && !quota.unlimited && quota.quota > 0 && (
+        <p className="text-[11px] text-ink/50 mt-3">
+          {quota.remaining} of {quota.quota} annual consultations remaining
+          {quota.period_end && ` · resets ${new Date(quota.period_end).toLocaleDateString("en-IN")}`}
+        </p>
+      )}
     </div>
   );
 }
@@ -400,7 +485,11 @@ function FamilyTab({ members, maxMembers, onChange }) {
   );
 }
 
-const CATEGORIES = ["appointment", "hospital", "diagnostic", "specialist", "follow_up", "other"];
+const CATEGORIES = [
+  "appointment", "hospital", "diagnostic", "specialist", "follow_up",
+  "admission", "discharge", "physical_assistance", "records", "family_update", "medical_travel",
+  "other",
+];
 
 function CareRequestsTab({ requests, familyMembers, onChange }) {
   const [form, setForm] = useState({ family_member_id: "", category: "appointment", title: "", description: "" });
@@ -474,10 +563,15 @@ function CareRequestsTab({ requests, familyMembers, onChange }) {
                 {r.status.replace("_", " ")}
               </span>
             </div>
-            <div className="text-[11px] text-ink/50 mt-1 flex items-center gap-2">
+            <div className="text-[11px] text-ink/50 mt-1 flex items-center gap-2 flex-wrap">
               <span className="capitalize">{r.category.replace("_", " ")}</span>
               <span>•</span>
               <span>{new Date(r.created_at).toLocaleDateString("en-IN")}</span>
+              {r.origin === "doctor_referral" && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-flare/15 text-flare">
+                  Referred by your doctor
+                </span>
+              )}
             </div>
             {r.description && <p className="text-xs text-ink/70 mt-2 bg-slate-50 p-2.5 rounded-xl">{r.description}</p>}
             {r.concierge_notes && (

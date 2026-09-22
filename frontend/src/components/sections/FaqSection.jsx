@@ -44,8 +44,8 @@ const FAQS = [
   },
   {
     category: "patients",
-    q: "What are the ROSKYRO Concierge VIP Membership plans?",
-    a: "We offer three annual plans: Care (₹24,999/yr), Family (₹59,999/yr), and NRI Care (₹99,999/yr). Members receive dedicated personal health concierges, free doctor consultations, ambulance dispatch covers, priority clinic appointments, and scheduled hospital accompaniment visits.",
+    q: "What is the ROSKYRO Concierge VIP Membership plan?",
+    a: "We offer the Doctor + Healthcare Concierge membership — a dedicated concierge doctor for your ongoing care, plus ROSKYRO coordinating everything that doctor refers you to: hospital visits, diagnostics, ambulance dispatch, and scheduled accompaniment. There's no fixed fee — pricing depends on the doctor's specialization and your care needs, shared after a quick call.",
   },
   {
     category: "patients",

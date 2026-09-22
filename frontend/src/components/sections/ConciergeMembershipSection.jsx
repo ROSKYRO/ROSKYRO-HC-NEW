@@ -7,9 +7,7 @@ import {
   Sparkles, 
   ShieldCheck, 
   ArrowRight,
-  HeartHandshake,
-  Users,
-  Globe
+  Stethoscope
 } from "lucide-react";
 import { WHATSAPP_BOOKING_NUMBER, waLink, BRAND } from "../../config";
 
@@ -22,70 +20,25 @@ function waFor(planName) {
 
 const PLANS = [
   {
-    id: "care",
-    name: "ROSKYRO Care",
-    price: "₹24,999",
-    period: "/year",
-    tagline: "Individual Member",
-    icon: HeartHandshake,
-    desc: "A personal healthcare concierge for anyone with regular doctor check-ups, follow-ups, or ongoing treatments.",
+    id: "doctor_concierge",
+    name: "Doctor + Healthcare Concierge",
+    price: "Custom pricing",
+    period: "based on your needs",
+    tagline: "One Doctor. One Concierge.",
+    icon: Stethoscope,
+    desc: "A dedicated concierge doctor manages your medical relationship. ROSKYRO manages everything that doctor refers you to.",
     included: [
-      "Dedicated personal healthcare concierge",
-      "4 ROSKYRO network doctor consultations / yr",
-      "2 verified ambulance coordinates / yr",
-      "2 medical-travel coordinates / yr",
-      "2 Concierge in-person visits / month",
-      "Appointment & hospital bed coordination",
-      "Doctor & specialist referrals",
-      "Diagnostic report pickup & WhatsApp updates",
-      "Digital health records archive",
-      "1 Second opinion consultation / yr",
-      "24x7 WhatsApp concierge helpdesk",
-    ],
-    highlight: false,
-  },
-  {
-    id: "family",
-    name: "ROSKYRO Family",
-    price: "₹59,999",
-    period: "/year",
-    tagline: "Up to 4 Family Members",
-    icon: Users,
-    desc: "Comprehensive hospital-level coverage for the whole family with a dedicated senior care coordinator.",
-    included: [
-      "Everything in Care, for up to 4 members",
-      "8 network doctor consultations / yr",
-      "4 verified ambulance assists / yr",
-      "4 medical-travel assists / yr",
-      "5 Concierge in-person visits / month (shared)",
-      "Priority Relationship Officer dispatch",
-      "Complete hospital admission & discharge oversight",
-      "Dedicated senior family care manager",
-      "2 Second opinion consultations / yr",
-      "Multi-channel family group updates",
+      "Dedicated concierge doctor for your ongoing care",
+      "Unlimited concierge coordination",
+      "Priority doctor access",
+      "Hospital, specialist & diagnostic coordination on referral",
+      "Admission & discharge assistance",
+      "Reasonable physical assistance (subject to fair-use policy)",
+      "Medical records & report coordination",
+      "Family / NRI updates",
+      "No hourly billing — unlimited coordination under fair-use policy",
     ],
     highlight: true,
-  },
-  {
-    id: "nri",
-    name: "ROSKYRO NRI Care",
-    price: "₹99,999",
-    period: "/year",
-    tagline: "Abroad Family + Parents in India",
-    icon: Globe,
-    desc: "Peace of mind for families living overseas who need an always-on, high-touch guardian for aging parents in India.",
-    included: [
-      "Everything in Family Plan",
-      "12 network doctor consultations / yr",
-      "6 verified ambulance assists / yr",
-      "6 medical-travel assists / yr",
-      "8 Concierge visits / month (shared)",
-      "Instant priority partner dispatch (<20 mins)",
-      "Overseas family video briefing post-doctor visit",
-      "4 Second opinion consultations / yr (specialist panel)",
-      "Real-time family dashboard & document sync",
-    ],
-    highlight: false,
   },
 ];
 
@@ -107,28 +60,27 @@ const SEPARATE = [
 
 export default function ConciergeMembershipSection() {
   return (
-    <section id="membership" className="py-16 md:py-24 bg-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        
-        {/* Header — the full "VIP Annual Memberships" pitch is now the
-            page hero above; keep this to a short lead-in so it doesn't
-            just repeat that same copy right before the pricing cards. */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-violet bg-mist px-3.5 py-1.5 rounded-full mb-3 border border-violet/15">
-            <Crown className="w-4 h-4 text-violet" />
+    <>
+      <section id="membership" className="py-16 md:py-24 bg-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase text-violet">
+            <Crown className="w-4 h-4" />
             Choose Your Plan
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink">
-            Three Membership Tiers, One Dedicated Concierge
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-3 mb-4">
+            One Membership. One Doctor. One Healthcare Concierge.
           </h2>
-          <p className="text-ink-muted text-base mt-2">
-            Pick the plan that matches how much support your family needs — from an individual member to full
-            NRI-family coverage.
+          <p className="text-ink-muted text-sm sm:text-base">
+            A dedicated concierge doctor owns your medical relationship, and ROSKYRO coordinates everything that
+            doctor refers you to.
           </p>
         </div>
 
+
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 items-stretch mb-16">
+        <div className="grid gap-8 items-stretch mb-16 max-w-md mx-auto">
           {PLANS.map((p) => {
             const Icon = p.icon;
             return (
@@ -165,14 +117,14 @@ export default function ConciergeMembershipSection() {
                     {p.desc}
                   </p>
 
-                  <div className="flex items-baseline gap-1.5 pb-6 mb-6 border-b border-ink/10">
-                    <span className="font-display text-4xl font-bold text-ink tracking-tight">
+                  <div className="flex items-baseline gap-1.5 pb-2 mb-2 border-b border-ink/10">
+                    <span className="font-display text-2xl font-bold text-ink tracking-tight">
                       {p.price}
                     </span>
-                    <span className="text-xs font-medium text-ink-muted">
-                      {p.period} + 18% GST
-                    </span>
                   </div>
+                  <p className="text-xs text-ink-muted mb-6">
+                    {p.period} — depends on your doctor's specialization &amp; care needs, shared after a quick call.
+                  </p>
 
                   {/* Included Feature List */}
                   <div className="space-y-2.5 mb-8">
@@ -198,7 +150,7 @@ export default function ConciergeMembershipSection() {
                         : "bg-ink text-white hover:bg-violet"
                     }`}
                   >
-                    <span>Choose {p.name}</span>
+                    <span>Enquire Now</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
 
@@ -214,10 +166,10 @@ export default function ConciergeMembershipSection() {
 
                   <div className="text-center pt-1">
                     <Link
-                      to="/membership/info"
+                      to="/membership/doctor-concierge"
                       className="text-[11px] font-semibold text-violet hover:underline"
                     >
-                      View full plan breakdown &amp; T&amp;C
+                      Learn more about this plan &amp; T&amp;C
                     </Link>
                   </div>
                 </div>
@@ -278,7 +230,8 @@ export default function ConciergeMembershipSection() {
           </div>
         </div>
 
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }

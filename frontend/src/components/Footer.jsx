@@ -107,6 +107,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link to="/membership/doctor-concierge" className="hover:text-parchment hover:underline transition-colors">
+                  Doctor + Healthcare Concierge
+                </Link>
+              </li>
+              <li>
                 <Link to="/membership/priority-access" className="hover:text-parchment hover:underline transition-colors">
                   Priority Doctor Access
                 </Link>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ADMIN_LOGIN_PATH } from "../config";
 
 // Combined deploy (frontend served BY the backend, same origin): leave
 // VITE_API_URL unset at build time and calls go to "/api" automatically.
@@ -15,6 +16,11 @@ const AUTH_ENDPOINTS = ["/auth/login", "/auth/signup", "/admin/auth/login", "/ho
 
 function loginPathFor(role) {
   if (role === "hospital_staff") return "/hospital/login";
+  // admin/support have no account on the public /login page — that's the
+  // customer login, a completely different backend endpoint. Send an
+  // expired team session back to the real (private, unlinked) admin path
+  // instead of a dead end.
+  if (role === "admin" || role === "support") return ADMIN_LOGIN_PATH;
   return "/login";
 }
 

@@ -21,6 +21,8 @@ import PriorityAccessProfile from "./pages/PriorityAccessProfile";
 import PriorityAccessApply from "./pages/PriorityAccessApply";
 import OfficerDischarge from "./pages/OfficerDischarge";
 import OfficerPortal from "./pages/OfficerPortal";
+import DoctorPortal from "./pages/DoctorPortal";
+import DoctorConciergePlan from "./pages/DoctorConciergePlan";
 import HospitalLogin from "./pages/HospitalLogin";
 import HospitalDashboard from "./pages/HospitalDashboard";
 import AdminHospitalProgram from "./pages/AdminHospitalProgram";
@@ -49,6 +51,14 @@ function AppLayout() {
           <Route path="/for-patients" element={<ForPatients />} />
           <Route path="/membership/join" element={<MembershipSignup />} />
           <Route path="/membership/info" element={<MembershipInfo />} />
+          {/* Standalone marketing page for the Doctor + Healthcare Concierge
+              plan — previously just a card among the other three on the
+              homepage teaser. /membership/doctor-concierge is the canonical
+              link (kept under /membership like info/priority-access);
+              /doctor-concierge is a short redirect for anything already
+              pointing at the old style of link. */}
+          <Route path="/membership/doctor-concierge" element={<DoctorConciergePlan />} />
+          <Route path="/doctor-concierge" element={<Navigate to="/membership/doctor-concierge" replace />} />
           <Route path="/member" element={<RequireAuth><MemberDashboard /></RequireAuth>} />
           {/* Priority Access (Doctors & Clinics) is a membership benefit, not a
               standalone service — it lives under /membership/priority-access. */}
@@ -63,6 +73,7 @@ function AppLayout() {
           <Route path="/admin" element={<RequireAdmin><AdminDashboard /></RequireAdmin>} />
           <Route path="/officer/discharge/:token" element={<OfficerDischarge />} />
           <Route path="/officer/portal/:token" element={<OfficerPortal />} />
+          <Route path="/doctor/portal/:token" element={<DoctorPortal />} />
           <Route path="/hospital/login" element={<HospitalLogin />} />
           <Route path="/hospital/dashboard" element={<RequireHospitalStaff><HospitalDashboard /></RequireHospitalStaff>} />
           <Route path="/admin/hospitals" element={<RequireAdmin><AdminHospitalProgram /></RequireAdmin>} />

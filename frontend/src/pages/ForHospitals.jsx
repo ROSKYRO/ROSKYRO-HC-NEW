@@ -130,7 +130,7 @@ const MEMBERSHIP_HOSPITAL_BENEFITS = [
   {
     icon: Crown,
     title: "Priority Officer Dispatch",
-    body: "Instant/priority Relationship Officer assignment on Family & NRI Care plans — in some cases within 20 minutes.",
+    body: "Instant/priority Relationship Officer assignment on the Doctor + Healthcare Concierge plan — in some cases within 20 minutes.",
   },
   {
     icon: ShieldCheck,
@@ -193,11 +193,11 @@ export default function ForHospitals() {
     <div className="bg-parchment min-h-screen">
       
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-indigo-950 via-slate-900 to-ink text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/20 via-transparent to-transparent pointer-events-none"></div>
+      <div className="bg-gradient-to-br from-violet-950 via-slate-900 to-ink text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-500/20 via-transparent to-transparent pointer-events-none"></div>
         
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-bold uppercase tracking-widest mb-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/20 border border-violet-400/30 text-violet-300 text-xs font-bold uppercase tracking-widest mb-6">
             <Building className="w-3.5 h-3.5" />
             <span>Pillar 01 · For Hospitals &amp; Healthcare Groups</span>
           </div>
@@ -211,7 +211,7 @@ export default function ForHospitals() {
           </p>
 
           <div className="max-w-xl mx-auto mb-10 flex items-start gap-3 text-left bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5">
-            <Quote className="w-5 h-5 text-indigo-300 shrink-0 mt-0.5" />
+            <Quote className="w-5 h-5 text-violet-300 shrink-0 mt-0.5" />
             <p className="text-white/70 text-xs sm:text-sm leading-relaxed italic">
               ROSKYRO = Healthcare Concierge + Patient Assistance + Hospital Partnership Platform. ROSKYRO does not provide treatment — it provides support, coordination and assistance to the patient and family around the treatment.
             </p>
@@ -220,7 +220,7 @@ export default function ForHospitals() {
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href="#partnership-inquiry"
-              className="px-7 py-3.5 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-sm sm:text-base flex items-center gap-2 shadow-lg shadow-indigo-500/25 transition-all"
+              className="px-7 py-3.5 rounded-full bg-brand-gradient hover:brightness-110 text-white font-bold text-sm sm:text-base flex items-center gap-2 shadow-lg shadow-violet-500/25 transition-all"
             >
               <span>Request Hospital Partnership</span>
               <ArrowRight className="w-4 h-4" />
@@ -230,7 +230,7 @@ export default function ForHospitals() {
               to="/hospital/login"
               className="px-6 py-3.5 rounded-full border border-white/25 hover:border-white/40 bg-white/10 hover:bg-white/15 text-white font-semibold text-sm sm:text-base flex items-center gap-2 transition-all"
             >
-              <Building className="w-4 h-4 text-indigo-300" />
+              <Building className="w-4 h-4 text-violet-300" />
               <span>Hospital Staff Console Login</span>
             </Link>
 
@@ -251,7 +251,7 @@ export default function ForHospitals() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {METRICS.map((m) => (
               <div key={m.label} className="p-2">
-                <div className="font-display text-3xl sm:text-4xl font-bold text-indigo-300 mb-1">{m.value}</div>
+                <div className="font-display text-3xl sm:text-4xl font-bold text-violet-300 mb-1">{m.value}</div>
                 <div className="text-xs sm:text-sm font-semibold text-white mb-0.5">{m.label}</div>
                 <div className="text-[11px] text-white/50">{m.desc}</div>
               </div>
@@ -281,7 +281,7 @@ export default function ForHospitals() {
       {/* Why Hospitals Partner */}
       <div id="benefits" className="max-w-6xl mx-auto px-4 sm:px-6 py-20">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="text-xs font-bold tracking-widest uppercase text-indigo-600">The Institutional Advantage</span>
+          <span className="text-xs font-bold tracking-widest uppercase text-violet-600">The Institutional Advantage</span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-4">
             One Dedicated Person, For Every Patient
           </h2>
@@ -292,8 +292,8 @@ export default function ForHospitals() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {BENEFITS.map(({ icon: Icon, title, body }) => (
-            <div key={title} className="bg-white border border-ink/10 rounded-2xl p-6 sm:p-7 shadow-xs hover:border-indigo-300 hover:shadow-md transition-all">
-              <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-5">
+            <div key={title} className="bg-white border border-ink/10 rounded-2xl p-6 sm:p-7 shadow-xs hover:border-violet-300 hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center mb-5">
                 <Icon className="w-6 h-6" />
               </div>
               <div className="font-display text-lg font-bold text-ink mb-2">{title}</div>
@@ -304,10 +304,10 @@ export default function ForHospitals() {
       </div>
 
       {/* What the Relationship Officer actually does, day to day */}
-      <div className="bg-indigo-950 text-white py-20">
+      <div className="bg-violet-950 text-white py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-bold tracking-widest uppercase text-indigo-300">Roles &amp; Responsibilities</span>
+            <span className="text-xs font-bold tracking-widest uppercase text-violet-300">Roles &amp; Responsibilities</span>
             <h2 className="font-display text-3xl sm:text-4xl font-bold mt-2 mb-3">
               What Your Dedicated Relationship Officer Actually Does
             </h2>
@@ -325,8 +325,8 @@ export default function ForHospitals() {
             ))}
           </div>
 
-          <div className="max-w-3xl mx-auto flex items-start gap-3 bg-indigo-500/10 border border-indigo-400/30 rounded-2xl p-4 sm:p-5">
-            <ShieldCheck className="w-5 h-5 text-indigo-300 shrink-0 mt-0.5" />
+          <div className="max-w-3xl mx-auto flex items-start gap-3 bg-violet-500/10 border border-violet-400/30 rounded-2xl p-4 sm:p-5">
+            <ShieldCheck className="w-5 h-5 text-violet-300 shrink-0 mt-0.5" />
             <p className="text-white/70 text-xs sm:text-sm leading-relaxed">
               <strong className="text-white">Important:</strong> An RO is not a medical attendant and does not make any treatment-related decisions. Every clinical decision always stays with the doctor and clinical team — the RO simply handles all the non-clinical work "around" the medicine, so clinical staff can focus purely on medicine.
             </p>
@@ -339,7 +339,7 @@ export default function ForHospitals() {
       <div className="bg-slate-100/70 border-y border-ink/10 py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-xs font-bold tracking-widest uppercase text-indigo-600">Standardized Workflow</span>
+            <span className="text-xs font-bold tracking-widest uppercase text-violet-600">Standardized Workflow</span>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-3">
               Admission to Active Concierge in 6 Smooth Steps
             </h2>
@@ -349,14 +349,14 @@ export default function ForHospitals() {
           <div className="grid sm:grid-cols-2 gap-4">
             {ONBOARDING_STEPS.map((step) => (
               <div key={step.title} className="bg-white border border-ink/10 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <div className="font-bold text-ink text-sm sm:text-base mb-1.5 text-indigo-900">{step.title}</div>
+                <div className="font-bold text-ink text-sm sm:text-base mb-1.5 text-violet-900">{step.title}</div>
                 <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">{step.body}</p>
               </div>
             ))}
           </div>
 
           <div className="mt-8 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-indigo-200 text-xs text-indigo-800 font-medium">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-violet-200 text-xs text-violet-800 font-medium">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               <span>Relationship Officers introduce themselves within 30 minutes of patient admission.</span>
             </div>
@@ -367,7 +367,7 @@ export default function ForHospitals() {
       {/* Journey coverage */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold tracking-widest uppercase text-indigo-600">Full Stay Lifecycle</span>
+          <span className="text-xs font-bold tracking-widest uppercase text-violet-600">Full Stay Lifecycle</span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-3">
             Concierge Support Across Every Hospital Milestone
           </h2>
@@ -376,7 +376,7 @@ export default function ForHospitals() {
         <div className="flex flex-wrap justify-center gap-3">
           {JOURNEY.map((stage) => (
             <div key={stage} className="flex items-center gap-2 bg-white border border-ink/10 rounded-full px-4 py-2 text-xs sm:text-sm font-semibold text-ink shadow-xs">
-              <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-violet-600" />
               <span>{stage}</span>
             </div>
           ))}
@@ -387,21 +387,21 @@ export default function ForHospitals() {
       <div className="bg-slate-100/70 border-y border-ink/10 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-bold tracking-widest uppercase text-indigo-600">Clear Scope, No Overlap</span>
+            <span className="text-xs font-bold tracking-widest uppercase text-violet-600">Clear Scope, No Overlap</span>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-3">
               What the RO Does vs. What Stays With the Doctor
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-5">
-            <div className="bg-white border border-indigo-200 rounded-2xl p-6">
+            <div className="bg-white border border-violet-200 rounded-2xl p-6">
               <div className="flex items-center gap-2 mb-4">
-                <UserCheck className="w-5 h-5 text-indigo-600" />
+                <UserCheck className="w-5 h-5 text-violet-600" />
                 <h3 className="font-bold text-ink text-sm sm:text-base">Relationship Officer (Non-Clinical)</h3>
               </div>
               <ul className="space-y-2.5">
                 {RO_VS_DOCTOR.ro.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-xs sm:text-sm text-ink-muted">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-violet-500 shrink-0 mt-0.5" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -428,12 +428,12 @@ export default function ForHospitals() {
       {/* Extra benefit to the hospital via Membership plans */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold tracking-widest uppercase text-indigo-600">Membership Spillover Benefit</span>
+          <span className="text-xs font-bold tracking-widest uppercase text-violet-600">Membership Spillover Benefit</span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-3">
             Extra Benefit to Your Hospital From Concierge Memberships
           </h2>
           <p className="text-ink-muted text-sm sm:text-base">
-            ROSKYRO's Concierge Membership (Care / Family / NRI Care) gives enrolled patients an extra layer of support — which benefits the hospital directly too.
+            ROSKYRO's Doctor + Healthcare Concierge Membership gives enrolled patients an extra layer of support — which benefits the hospital directly too.
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -450,22 +450,22 @@ export default function ForHospitals() {
       </div>
 
       {/* Trust & Verification */}
-      <div className="bg-emerald-950 text-white py-16">
+      <div className="bg-ink text-white py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-xs font-bold tracking-widest uppercase text-emerald-300">Trust &amp; Verification</span>
+            <span className="text-xs font-bold tracking-widest uppercase text-flare">Trust &amp; Verification</span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold mt-2">Every Officer, Fully Accountable</h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {TRUST_POINTS.map(({ icon: Icon, text }) => (
               <div key={text} className="flex items-start gap-3 bg-white/5 border border-white/10 rounded-xl p-4">
-                <Icon className="w-4 h-4 text-emerald-300 shrink-0 mt-0.5" />
+                <Icon className="w-4 h-4 text-flare shrink-0 mt-0.5" />
                 <p className="text-xs sm:text-sm text-white/80 leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
           <div className="max-w-3xl mx-auto mt-8 flex items-start gap-3 bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5">
-            <Quote className="w-5 h-5 text-emerald-300 shrink-0 mt-0.5" />
+            <Quote className="w-5 h-5 text-flare shrink-0 mt-0.5" />
             <p className="text-white/70 text-xs sm:text-sm leading-relaxed italic">
               A ROSKYRO Relationship Officer is not just a "helper" — it is a zero-payroll, background-verified, fully-managed patient-experience layer for the hospital/clinic that frees up clinical staff, speeds up discharge, structures family communication, and measurably improves patient satisfaction.
             </p>
@@ -476,9 +476,9 @@ export default function ForHospitals() {
       {/* Partnership Inquiry Form Section */}
       <div id="partnership-inquiry" className="bg-white border-t border-ink/10 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="bg-indigo-950 text-white rounded-3xl p-8 sm:p-12 shadow-2xl">
+          <div className="bg-violet-950 text-white rounded-3xl p-8 sm:p-12 shadow-2xl">
             <div className="max-w-xl mx-auto text-center mb-8">
-              <ClipboardCheck className="w-10 h-10 mx-auto mb-3 text-indigo-400" />
+              <ClipboardCheck className="w-10 h-10 mx-auto mb-3 text-flare" />
               <h3 className="font-display text-2xl sm:text-3xl font-bold mb-2">
                 Partner Your Hospital with ROSKYRO
               </h3>
@@ -507,7 +507,7 @@ export default function ForHospitals() {
                       value={inquiryForm.hospitalName}
                       onChange={(e) => setInquiryForm({ ...inquiryForm, hospitalName: e.target.value })}
                       placeholder="e.g. LifeCare SuperSpeciality"
-                      className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-400"
                     />
                   </div>
                   <div>
@@ -518,7 +518,7 @@ export default function ForHospitals() {
                       value={inquiryForm.contactPerson}
                       onChange={(e) => setInquiryForm({ ...inquiryForm, contactPerson: e.target.value })}
                       placeholder="e.g. Dr. Rajesh Sharma, Medical Director"
-                      className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-400"
                     />
                   </div>
                 </div>
@@ -532,7 +532,7 @@ export default function ForHospitals() {
                       value={inquiryForm.phone}
                       onChange={(e) => setInquiryForm({ ...inquiryForm, phone: e.target.value })}
                       placeholder="e.g. 9876543210"
-                      className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-400"
                     />
                   </div>
                   <div>
@@ -543,7 +543,7 @@ export default function ForHospitals() {
                       value={inquiryForm.email}
                       onChange={(e) => setInquiryForm({ ...inquiryForm, email: e.target.value })}
                       placeholder="e.g. contact@hospital.com"
-                      className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-400"
                     />
                   </div>
                 </div>
@@ -553,7 +553,7 @@ export default function ForHospitals() {
                   <select
                     value={inquiryForm.bedCount}
                     onChange={(e) => setInquiryForm({ ...inquiryForm, bedCount: e.target.value })}
-                    className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-violet-400"
                   >
                     <option value="Under 50 beds" className="bg-ink text-white">Under 50 beds</option>
                     <option value="50-100 beds" className="bg-ink text-white">50 - 100 beds</option>
@@ -569,13 +569,13 @@ export default function ForHospitals() {
                     value={inquiryForm.notes}
                     onChange={(e) => setInquiryForm({ ...inquiryForm, notes: e.target.value })}
                     placeholder="Tell us about your patient volume, departments, or current challenges with non-clinical coordination..."
-                    className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-violet-400"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 transition-all"
+                  className="w-full py-3 rounded-xl bg-brand-gradient hover:brightness-110 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-violet-500/25 transition-all"
                 >
                   <Send className="w-4 h-4" />
                   <span>Send Partnership Proposal Request</span>

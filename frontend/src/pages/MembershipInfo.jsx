@@ -11,64 +11,27 @@ import { SUPPORT_EMAIL, WHATSAPP_SUPPORT_NUMBER, waLink, BRAND } from "../config
 
 const PLANS = [
   {
-    id: "care",
-    name: "ROSKYRO Care",
-    tag: "Individual",
-    price: "₹24,999",
-    who: "Anyone with regular check-ups, follow-ups, or an ongoing health condition who wants one person handling the coordination.",
-    desc: "A personal healthcare concierge for one member.",
+    id: "doctor_concierge",
+    name: "Doctor + Healthcare Concierge",
+    tag: "One Doctor. One Concierge.",
+    price: "Custom pricing",
+    priceNote: "Depends on your doctor's specialization & care needs — shared after a quick call, no fixed fee.",
+    who: "Anyone who wants a single dedicated doctor to own their ongoing medical relationship, with ROSKYRO handling everything that doctor refers them to.",
+    desc: "Your doctor manages your health. ROSKYRO manages everything around it.",
     included: [
-      "Personal healthcare concierge",
-      "4 ROSKYRO network doctor consultations/year",
-      "2 verified ambulance assists/year",
-      "2 medical-travel assists/year",
-      "Appointment coordination",
-      "Doctor & specialist coordination",
-      "Diagnostic booking",
-      "Follow-up reminders",
-      "Medical records coordination",
-      "WhatsApp concierge support",
+      "A dedicated concierge doctor for your ongoing medical relationship",
+      "Unlimited concierge coordination",
+      "Priority doctor access with your assigned doctor",
+      "Preventive & ongoing health management",
+      "Hospital, specialist & diagnostic coordination on referral",
+      "Admission & discharge assistance",
+      "Reasonable physical assistance, subject to the membership's fair-use policy",
+      "Medical records & report coordination",
+      "Family / NRI updates",
+      "Medical travel coordination when required",
+      "No hourly billing — unlimited coordination under the plan's fair-use policy",
     ],
-    freeVisits: "2 free Relationship Officer visits/month",
-    popular: false,
-  },
-  {
-    id: "family",
-    name: "ROSKYRO Family",
-    tag: "Up to 4 members",
-    price: "₹59,999",
-    who: "Families where parents/elders live in the same city as the rest of the family, and everyone's healthcare needs a single point of coordination.",
-    desc: "Everything in Care, for the whole family, with a dedicated care manager.",
-    included: [
-      "Everything in Care, for up to 4 members",
-      "8 network doctor consultations/year",
-      "4 ambulance assists/year",
-      "4 medical-travel assists/year",
-      "Priority coordination",
-      "Hospital & discharge coordination",
-      "Dedicated family care manager",
-      "Family WhatsApp updates",
-    ],
-    freeVisits: "5 free Relationship Officer visits/month (shared across your 4 members)",
-    popular: true,
-  },
-  {
-    id: "nri",
-    name: "ROSKYRO NRI Care",
-    tag: "Abroad family + parents in India",
-    price: "₹99,999",
-    who: "Families living abroad who want a trusted, always-on concierge looking after parents back home.",
-    desc: "Everything in Family, built for long-distance peace of mind.",
-    included: [
-      "Everything in Family",
-      "12 network doctor consultations/year",
-      "6 ambulance assists/year",
-      "6 medical-travel assists/year",
-      "Priority Relationship Officer booking",
-      "Medical document coordination",
-      "Live family updates dashboard",
-    ],
-    freeVisits: "8 free Relationship Officer visits/month (shared across your members)",
+    freeVisits: "Unlimited concierge coordination (fair-use policy applies)",
     popular: false,
   },
 ];
@@ -85,19 +48,18 @@ const COVERED = [
 ];
 
 const SEPARATE = [
-  "Doctor / specialist consultations beyond your plan's yearly allowance",
   "Lab tests, MRI/CT & imaging",
   "Medicines & pharmacy",
   "Hospital bill",
-  "Ambulance assists beyond your plan's yearly allowance",
-  "Medical-travel assists beyond your plan's yearly allowance",
+  "Ambulance",
+  "Medical-travel",
 ];
 
 const GOOD_TO_KNOW = [
   {
     icon: "💳",
     title: "Billing",
-    body: "All plans are billed annually. Your annual price is locked in at the price you sign up for — it won't increase even if plan prices change later. Payment is confirmed via UPI on WhatsApp; no card details are collected on this site.",
+    body: "There is no fixed membership fee — your doctor's specialization and your family's actual care needs both move the price. Your concierge shares a price after understanding your needs on a call, and it's locked in for the year once you agree — it won't increase even if plan pricing changes later. Payment is confirmed via UPI on WhatsApp; no card details are collected on this site.",
   },
   {
     icon: "🔄",
@@ -114,6 +76,11 @@ const GOOD_TO_KNOW = [
     title: "Not medical treatment",
     body: "ROSKYRO Concierge coordinates your healthcare journey. It does not replace a doctor, nurse, or emergency service. For any medical emergency, always call 108/112 first.",
   },
+  {
+    icon: "⚖️",
+    title: "Fair-use policy",
+    body: "\"Unlimited\" coordination and physical assistance on the Doctor + Healthcare Concierge plan means no per-visit or per-month cap for genuine, ongoing coordination needs — not unrestricted, round-the-clock personal errands. Your concierge will flag it if usage looks unusual, and ROSKYRO may ask for a quick check-in before continuing support in such cases.",
+  },
 ];
 
 const PRIVACY_POINTS = [
@@ -125,11 +92,11 @@ const PRIVACY_POINTS = [
 ];
 
 const STEPS = [
-  "Pick the plan that fits your family — Care, Family, or NRI Care.",
-  "Create your ROSKYRO account (name, phone number) or log in if you already have one.",
-  "Confirm your membership — your first invoice is created as pending.",
-  "A concierge confirms your payment via UPI on WhatsApp.",
-  "Your concierge reaches out to set up your family profile and starts coordinating from day one.",
+  "Send us a quick inquiry — your name, phone, and what you need (e.g. a specialization, a family member's condition/age).",
+  "A concierge calls you back to understand your requirement in detail.",
+  "We share your membership price, based on that conversation — there's no fixed fee.",
+  "Once you agree, we set up your account and your first invoice as pending.",
+  "A concierge confirms your payment via UPI on WhatsApp, then starts coordinating from day one.",
 ];
 
 export default function MembershipInfo() {
@@ -168,13 +135,13 @@ export default function MembershipInfo() {
 
         {/* Plans */}
         <section className="py-11">
-          <h2 className="font-display text-[22px] text-ink mb-1.5">Choose your plan</h2>
+          <h2 className="font-display text-[22px] text-ink mb-1.5">The membership</h2>
           <p className="text-ink/60 text-[14.5px] mb-6 max-w-xl">
-            Every plan includes a dedicated concierge. The difference is how many people are covered and how much
-            coordination priority you get.
+            One plan: a dedicated concierge doctor owns your medical relationship, and ROSKYRO coordinates
+            everything that doctor refers you to.
           </p>
 
-          <div className="grid sm:grid-cols-3 gap-5">
+          <div className="grid gap-5 max-w-sm">
             {PLANS.map((p) => (
               <div
                 key={p.id}
@@ -192,9 +159,9 @@ export default function MembershipInfo() {
                   <div className="text-[19px] font-bold text-ink">{p.name}</div>
                   <div className="text-magenta text-xs font-semibold mb-3.5">{p.tag}</div>
                   <div className="mb-1">
-                    <span className="text-3xl font-bold text-ink">{p.price}</span>
-                    <span className="text-sm text-ink/50 font-medium">/year</span>
+                    <span className="text-2xl font-bold text-ink">{p.price}</span>
                   </div>
+                  <p className="text-[12.5px] text-ink/50 mb-2">{p.priceNote}</p>
                   <div className="bg-mist rounded-lg px-3 py-2.5 text-[13px] text-ink my-3.5">
                     <b className="text-violet">Best for:</b> {p.who}
                   </div>
@@ -223,7 +190,7 @@ export default function MembershipInfo() {
         <section className="py-11">
           <h2 className="font-display text-[22px] text-ink mb-1.5">What's included, what's billed separately</h2>
           <p className="text-ink/60 text-[14.5px] mb-6 max-w-xl">
-            This applies to all three plans — there are no hidden charges beyond what's listed here.
+            There are no hidden charges beyond what's listed here.
           </p>
           <div className="grid sm:grid-cols-2 gap-6">
             <div className="bg-white border border-mist rounded-2xl p-5">
@@ -234,7 +201,7 @@ export default function MembershipInfo() {
               </ul>
             </div>
             <div className="bg-white border border-mist rounded-2xl p-5">
-              <h4 className="text-ink/50 text-xs font-semibold uppercase tracking-wide mb-3">Billed separately (published rates)</h4>
+              <h4 className="text-ink/50 text-xs font-semibold uppercase tracking-wide mb-3">Billed separately &amp; billed directly by medical facilities</h4>
               <ul className="space-y-1.5 text-[13.5px] text-ink list-disc pl-4">
                 {SEPARATE.map((item) => <li key={item}>{item}</li>)}
               </ul>
@@ -242,22 +209,16 @@ export default function MembershipInfo() {
           </div>
 
           <div className="bg-mist rounded-2xl px-5 py-4.5 text-[13.5px] text-ink border-l-4 border-violet mt-5">
-            <b className="text-violet">Free Relationship Officer visits included every month:</b>
+            <b className="text-violet">Concierge coordination:</b>
             <br />
-            ROSKYRO Care — <b>2 visits/month</b> &nbsp;·&nbsp; ROSKYRO Family — <b>5 visits/month</b> (shared
-            across all covered members) &nbsp;·&nbsp; ROSKYRO NRI Care — <b>8 visits/month</b> (shared across
-            all covered members)
-            <br />
-            The free quota resets every month and does not carry forward.
+            Unlimited concierge coordination, subject to the plan's fair-use policy.
           </div>
 
           <div className="bg-mist rounded-2xl px-5 py-4.5 text-[13.5px] text-ink border-l-4 border-magenta mt-4">
             <b className="text-magenta">Annual allowances included every year:</b>
             <br />
-            ROSKYRO Care — <b>4 doctor consultations</b>, <b>2 ambulance assists</b>, <b>2 medical-travel assists</b>
-            &nbsp;·&nbsp; ROSKYRO Family — <b>8 doctor consultations</b>, <b>4 ambulance assists</b>,{" "}
-            <b>4 medical-travel assists</b> &nbsp;·&nbsp; ROSKYRO NRI Care — <b>12 doctor consultations</b>,{" "}
-            <b>6 ambulance assists</b>, <b>6 medical-travel assists</b>
+            Priority doctor access with your assigned doctor, <b>4 ambulance assists</b>,{" "}
+            <b>6 medical-travel assists</b>
             <br />
             These allowances reset once a year, with your membership's billing cycle.
           </div>
@@ -270,8 +231,10 @@ export default function MembershipInfo() {
         <section className="py-11">
           <h2 className="font-display text-[22px] text-ink mb-1.5">Priority Access to doctors &amp; hospitals</h2>
           <p className="text-ink/60 text-[14.5px] mb-5 max-w-xl">
-            All three plans include Priority Access — search ROSKYRO's verified network of doctors and hospitals
-            and request a priority appointment, which your concierge confirms.
+            All plans include Priority Access — search ROSKYRO's verified network of doctors and hospitals
+            and request a priority appointment, which your concierge confirms. On the Doctor + Healthcare Concierge
+            plan, this is on top of your dedicated concierge doctor — for when you need a second specialist outside
+            their referral.
           </p>
           <Link
             to="/membership/priority-access"
@@ -339,7 +302,7 @@ export default function MembershipInfo() {
                 to="/membership/join"
                 className="inline-block bg-brand-gradient text-white font-bold text-sm px-6 py-3 rounded-full hover:opacity-90 transition-opacity"
               >
-                Sign up for ROSKYRO Concierge
+                Enquire for ROSKYRO Concierge
               </Link>
               <a
                 href={waLink(WHATSAPP_SUPPORT_NUMBER, `Hi ${BRAND}, I have a question about the Concierge membership.`)}

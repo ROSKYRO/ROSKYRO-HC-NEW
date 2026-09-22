@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
   Building2, 
@@ -7,17 +6,15 @@ import {
   ArrowRight, 
   ShieldCheck, 
   Star, 
-  Crown, 
-  CheckCircle2, 
   MessageSquare,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  Lock,
+  Search,
 } from "lucide-react";
 import { BOOK_WA_LINK, SUPPORT_PHONE_DISPLAY, PILOT_CITY, PILOT_STATE } from "../../config";
 
 export default function Hero() {
-  const [activeHeroCard, setActiveHeroCard] = useState(1); // 0: Hospitals, 1: Patients, 2: Officers
-
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-white via-mist/50 to-slate-50 pt-10 sm:pt-14 pb-14 sm:pb-20">
       {/* Subtle Background Glows */}
@@ -56,10 +53,10 @@ export default function Hero() {
           </Link>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          
-          {/* Left Column: Core Value Proposition */}
-          <div className="lg:col-span-7 text-center lg:text-left">
+        <div className="grid lg:grid-cols-[1.08fr_0.92fr] gap-12 lg:gap-8 items-center">
+
+          {/* Core Value Proposition */}
+          <div className="max-w-3xl lg:max-w-none mx-auto lg:mx-0 text-center lg:text-left">
             
             {/* Live Pilot Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 mb-6 shadow-xs">
@@ -71,7 +68,7 @@ export default function Hero() {
             </div>
 
             {/* Main Headline */}
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.12] text-ink tracking-tight mb-5">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold leading-[1.12] text-ink tracking-tight mb-5">
               India's Healthcare Concierge, <br className="hidden sm:block" />
               <span className="bg-brand-gradient bg-clip-text text-transparent">
                 Built on Three Core Pillars.
@@ -141,168 +138,72 @@ export default function Hero() {
 
           </div>
 
-          {/* Right Column: Interactive 3-Pillar Spotlight Card */}
-          <div className="lg:col-span-5">
-            <div className="relative mx-auto max-w-md w-full">
-              
-              {/* Tab Selector on top of card */}
-              <div className="flex items-center justify-between bg-slate-200/80 p-1.5 rounded-2xl mb-3 text-xs font-bold">
-                <button
-                  onClick={() => setActiveHeroCard(0)}
-                  className={`flex-1 py-1.5 rounded-xl transition-all ${
-                    activeHeroCard === 0 ? "bg-white text-indigo-700 shadow-xs" : "text-ink/60 hover:text-ink"
-                  }`}
-                >
-                  For Hospitals
-                </button>
-                <button
-                  onClick={() => setActiveHeroCard(1)}
-                  className={`flex-1 py-1.5 rounded-xl transition-all ${
-                    activeHeroCard === 1 ? "bg-white text-violet shadow-xs" : "text-ink/60 hover:text-ink"
-                  }`}
-                >
-                  For Patients
-                </button>
-                <button
-                  onClick={() => setActiveHeroCard(2)}
-                  className={`flex-1 py-1.5 rounded-xl transition-all ${
-                    activeHeroCard === 2 ? "bg-white text-emerald-700 shadow-xs" : "text-ink/60 hover:text-ink"
-                  }`}
-                >
-                  Join ROSKYRO
-                </button>
-              </div>
+          {/* Priority Access — Browser Window Preview Card */}
+          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
 
-              {/* Dynamic Card Container */}
-              <div className="p-[1.5px] rounded-3xl bg-gradient-to-b from-violet via-magenta/40 to-slate-300 shadow-xl">
-                <div className="bg-white rounded-[23px] overflow-hidden p-6">
-                  
-                  {activeHeroCard === 0 && (
-                    <div className="animate-fadeIn">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-                          Pillar 01 · Healthcare Providers
-                        </span>
-                        <Building2 className="w-5 h-5 text-indigo-600" />
-                      </div>
-                      <h3 className="font-display text-2xl font-bold text-ink mb-1">
-                        Patient Concierge Program
-                      </h3>
-                      <p className="text-xs text-ink-muted mb-4 leading-relaxed">
-                        Dedicated Relationship Officers for admitted beds. Relieve nursing desks of routine coordination.
-                      </p>
-                      <div className="space-y-2 text-xs text-ink/80 mb-5 bg-slate-50 p-3.5 rounded-xl">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                          <span>0 payroll burden &amp; 0 HR liability</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                          <span>Faster discharge &amp; billing clearance</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                          <span>Real-time Hospital Staff Console</span>
-                        </div>
-                      </div>
-                      <Link
-                        to="/for-hospitals"
-                        className="block w-full text-center py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition-colors shadow-sm"
-                      >
-                        Explore Hospital Partnership →
-                      </Link>
-                    </div>
-                  )}
+            {/* Floating "New" badge */}
+            <span className="absolute -top-3.5 left-6 z-10 bg-brand-gradient text-white text-[10.5px] font-bold uppercase tracking-wide px-3 py-1 rounded-full shadow-md">
+              Membership Benefit
+            </span>
 
-                  {activeHeroCard === 1 && (
-                    <div className="animate-fadeIn">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-violet/10 text-violet border border-violet/20">
-                          Pillar 02 · Patients &amp; Families
-                        </span>
-                        <HeartHandshake className="w-5 h-5 text-violet" />
-                      </div>
-                      <h3 className="font-display text-2xl font-bold text-ink mb-1">
-                        Bedside Care &amp; VIP Passes
-                      </h3>
-                      <p className="text-xs text-ink-muted mb-4 leading-relaxed">
-                        A personal officer at your bedside for hospital visits, admission paperwork, and family peace of mind.
-                      </p>
-                      <div className="space-y-2 text-xs text-ink/80 mb-5 bg-violet/5 p-3.5 rounded-xl">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-violet shrink-0" />
-                          <span>Assigned within 30 min of admission</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-violet shrink-0" />
-                          <span>VIP Care memberships from ₹24,999/yr</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-violet shrink-0" />
-                          <span>Daily photo &amp; milestone family updates</span>
-                        </div>
-                      </div>
-                      <Link
-                        to="/for-patients"
-                        className="block w-full text-center py-2.5 rounded-xl bg-brand-gradient text-white text-xs font-bold hover:opacity-95 transition-opacity shadow-sm"
-                      >
-                        Explore Patient Care &amp; Passes →
-                      </Link>
-                    </div>
-                  )}
-
-                  {activeHeroCard === 2 && (
-                    <div className="animate-fadeIn">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          Pillar 03 · Join ROSKYRO
-                        </span>
-                        <UserPlus className="w-5 h-5 text-emerald-600" />
-                      </div>
-                      <h3 className="font-display text-2xl font-bold text-ink mb-1">
-                        Earn with Dignity as an Officer
-                      </h3>
-                      <p className="text-xs text-ink-muted mb-4 leading-relaxed">
-                        Join our certified healthcare concierge workforce with weekly pay, benefits, and respected uniforms.
-                      </p>
-                      <div className="space-y-2 text-xs text-ink/80 mb-5 bg-emerald-50/50 p-3.5 rounded-xl">
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span>Direct weekly UPI bank payouts</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span>Day-one accident &amp; health insurance</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span>Certified 5-day professional training</span>
-                        </div>
-                      </div>
-                      <Link
-                        to="/become-a-partner"
-                        className="block w-full text-center py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors shadow-sm"
-                      >
-                        Apply to Join ROSKYRO →
-                      </Link>
-                    </div>
-                  )}
-
-                  {/* Card Footer */}
-                  <div className="mt-4 pt-3 border-t border-ink/5 flex items-center justify-between text-[11px] text-ink-muted">
-                    <span className="flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                      Official Platform
-                    </span>
-                    <a href="#faq" className="text-violet hover:underline font-medium">
-                      FAQs &amp; Help
-                    </a>
-                  </div>
-
+            <Link
+              to="/membership/priority-access"
+              className="group block rounded-2xl border border-ink/10 bg-white shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all overflow-hidden"
+            >
+              {/* Browser chrome bar */}
+              <div className="flex items-center gap-3 px-4 py-3 bg-slate-100 border-b border-ink/10">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                </div>
+                <div className="flex-1 flex items-center gap-1.5 bg-white rounded-full border border-ink/10 px-3 py-1 text-[11px] text-ink-muted truncate">
+                  <Lock className="w-3 h-3 text-emerald-600 shrink-0" />
+                  <span className="truncate">roskyro.in/membership/priority-access</span>
                 </div>
               </div>
 
-            </div>
+              {/* Window content — mini Priority Access preview */}
+              <div className="p-5 sm:p-6 bg-gradient-to-b from-mist/60 to-white">
+                <span className="text-[11px] font-bold tracking-wide text-magenta block mb-1.5">
+                  PRIORITY ACCESS NETWORK
+                </span>
+                <h3 className="font-display text-xl sm:text-2xl text-ink font-bold mb-2 leading-snug">
+                  Find a Priority Access partner.
+                </h3>
+                <p className="text-xs sm:text-sm text-ink-muted mb-4 leading-relaxed">
+                  Verified doctors &amp; hospitals offering priority appointments — search by city and specialty.
+                </p>
+
+                {/* Decorative mini search form */}
+                <div className="grid grid-cols-2 gap-2 mb-2">
+                  <div className="rounded-lg border border-ink/15 bg-white px-3 py-2 text-xs text-ink-muted/70">
+                    City (e.g. Jabalpur)
+                  </div>
+                  <div className="rounded-lg border border-ink/15 bg-white px-3 py-2 text-xs text-ink-muted/70">
+                    Specialty / dept.
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex-1 rounded-lg border border-ink/15 bg-white px-3 py-2 text-xs text-ink-muted/70">
+                    Doctor or Hospital
+                  </div>
+                  <div className="shrink-0 rounded-full bg-brand-gradient text-white text-xs font-semibold px-4 py-2 flex items-center gap-1.5 shadow-sm group-hover:shadow-glow transition-shadow">
+                    <Search className="w-3.5 h-3.5" />
+                    <span>Search</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-2 pt-3 border-t border-ink/10">
+                  <span className="text-[11px] text-ink-muted flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Booking needs Concierge membership
+                  </span>
+                  <span className="text-xs font-semibold text-violet flex items-center gap-1 shrink-0 group-hover:gap-2 transition-all">
+                    Explore <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </div>
+            </Link>
           </div>
 
         </div>

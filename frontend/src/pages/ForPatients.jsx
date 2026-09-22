@@ -1,8 +1,15 @@
-import { Quote, ArrowRight, ShieldCheck, HeartHandshake, MessageSquare, Crown, Zap, UserCheck, Stethoscope, MessageCircle, Ambulance, CheckCircle2 } from "lucide-react";
+import { Quote, ArrowRight, ShieldCheck, HeartHandshake, MessageSquare, Zap, UserCheck, Stethoscope, MessageCircle, Ambulance, CheckCircle2, HeartPulse } from "lucide-react";
 import { Link } from "react-router-dom";
 import { BRAND, SUPPORT_PHONE_DISPLAY, BOOK_WA_LINK } from "../config";
 import useSEO from "../hooks/useSEO";
 import ConciergeMembershipSection from "../components/sections/ConciergeMembershipSection";
+
+const METRICS = [
+  { value: "9", label: "Journey Stages Covered", desc: "Admission through to discharge closure" },
+  { value: "< 20m", label: "Priority RO Dispatch", desc: "On the Doctor + Concierge plan" },
+  { value: "100%", label: "Police-Verified Officers", desc: "Background-checked & trained" },
+  { value: "24/7", label: "Family Updates", desc: "Structured, authorized communication" },
+];
 
 const JOURNEY = [
   { stage: "Admission", body: "Your Relationship Officer meets you at admission — paperwork, formalities, and settling in." },
@@ -20,7 +27,7 @@ const MEMBERSHIP_VALUE = [
   {
     icon: Zap,
     title: "Priority Relationship Officer Dispatch",
-    body: "On Family & NRI Care plans, RO assignment becomes instant/priority — in some cases within 20 minutes. Even during an emergency or urgent admission, there's no waiting around: a dedicated person is available almost immediately to begin counselling, coordination and guidance.",
+    body: "On the Doctor + Healthcare Concierge plan, RO assignment becomes instant/priority — in some cases within 20 minutes. Even during an emergency or urgent admission, there's no waiting around: a dedicated person is available almost immediately to begin counselling, coordination and guidance.",
   },
   {
     icon: UserCheck,
@@ -56,27 +63,87 @@ const CORE_RO_SUPPORT = [
 export default function ForPatients() {
   useSEO({
     path: "/for-patients",
-    title: `${BRAND} Concierge — VIP Annual Memberships`,
+    title: `${BRAND} Concierge — One Membership. One Doctor. One Healthcare Concierge.`,
     description:
-      "Choose an annual ROSKYRO Concierge plan — Care, Family or NRI Care — for a dedicated Relationship Officer and stress-free family health coordination.",
+      "A dedicated concierge doctor owns your medical relationship, and ROSKYRO coordinates everything that doctor refers you to.",
   });
 
   return (
-    <div>
-      {/* Hero */}
-      <div className="bg-brand-gradient text-white">
-        <div className="max-w-4xl mx-auto px-5 py-20 text-center">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase opacity-85">
-            <Crown className="w-4 h-4" />
-            VIP Annual Memberships
-          </span>
-          <h1 className="font-display text-4xl sm:text-5xl mt-3 mb-5">One Trusted Concierge for Your Whole Healthcare Journey</h1>
-          <p className="text-white/85 max-w-2xl mx-auto leading-relaxed text-lg">
-            No more running between counters, chasing doctors, or worrying from another city. Choose an annual plan
-            for ongoing, stress-free family health coordination.
+    <div className="bg-parchment min-h-screen">
+
+      {/* Hero Section — matches the For Hospitals / Join ROSKYRO pillar hero */}
+      <div className="bg-gradient-to-br from-violet-950 via-slate-900 to-ink text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-500/20 via-transparent to-transparent pointer-events-none"></div>
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/20 border border-violet-400/30 text-violet-300 text-xs font-bold uppercase tracking-widest mb-6">
+            <HeartPulse className="w-3.5 h-3.5" />
+            <span>Pillar 02 · For Patients &amp; Families</span>
+          </div>
+
+          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6">
+            Someone By Your Side, From Admission to Discharge
+          </h1>
+
+          <p className="text-white/80 max-w-2xl mx-auto leading-relaxed text-base sm:text-lg mb-8">
+            A dedicated, background-verified ROSKYRO Relationship Officer walks with you and your family through
+            every stage of a hospital stay — explaining, coordinating and keeping everyone informed, so you can
+            focus on what matters.
           </p>
+
+          <div className="max-w-xl mx-auto mb-10 flex items-start gap-3 text-left bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-5">
+            <Quote className="w-5 h-5 text-violet-300 shrink-0 mt-0.5" />
+            <p className="text-white/70 text-xs sm:text-sm leading-relaxed italic">
+              ROSKYRO = Healthcare Concierge + Patient Assistance + Hospital Partnership Platform. ROSKYRO does not
+              provide treatment — it provides support, coordination and assistance to the patient and family around
+              the treatment.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href="#membership"
+              className="px-7 py-3.5 rounded-full bg-brand-gradient hover:brightness-110 text-white font-bold text-sm sm:text-base flex items-center gap-2 shadow-lg shadow-violet-500/25 transition-all"
+            >
+              <span>View Membership Plans</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+
+            <Link
+              to="/login"
+              className="px-6 py-3.5 rounded-full border border-white/25 hover:border-white/40 bg-white/10 hover:bg-white/15 text-white font-semibold text-sm sm:text-base flex items-center gap-2 transition-all"
+            >
+              <UserCheck className="w-4 h-4 text-violet-300" />
+              <span>Member Login</span>
+            </Link>
+
+            <a
+              href={BOOK_WA_LINK}
+              target="_blank"
+              rel="noreferrer"
+              className="px-5 py-3.5 rounded-full border border-white/20 text-white/90 hover:text-white text-sm sm:text-base flex items-center gap-2 transition-colors"
+            >
+              <MessageSquare className="w-4 h-4 text-flare" />
+              <span>WhatsApp Direct: {SUPPORT_PHONE_DISPLAY}</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Metrics Banner */}
+        <div className="border-t border-white/10 bg-white/5 py-8">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {METRICS.map((m) => (
+              <div key={m.label} className="p-2">
+                <div className="font-display text-3xl sm:text-4xl font-bold text-violet-300 mb-1">{m.value}</div>
+                <div className="text-xs sm:text-sm font-semibold text-white mb-0.5">{m.label}</div>
+                <div className="text-[11px] text-white/50">{m.desc}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      <ConciergeMembershipSection />
 
       {/* What's included / what's not */}
       <div className="bg-slate-50 py-20">
@@ -172,11 +239,6 @@ export default function ForPatients() {
           </div>
         </div>
       </div>
-
-      {/* VIP Membership plans — moved here from the homepage; this is what
-          the "See how it works" / "VIP Membership" links across the site
-          now point to (#membership) */}
-      <ConciergeMembershipSection />
 
       {/* Priority Access to doctors & hospitals — a membership benefit, not
           a separate service. Surfaced here so members know it's included. */}

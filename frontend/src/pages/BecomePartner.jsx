@@ -96,11 +96,11 @@ export default function BecomePartner() {
     <div className="bg-parchment min-h-screen">
       
       {/* Hero Header */}
-      <div className="bg-gradient-to-br from-emerald-950 via-slate-900 to-ink text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/20 via-transparent to-transparent pointer-events-none"></div>
+      <div className="bg-gradient-to-br from-violet-950 via-slate-900 to-ink text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-500/20 via-transparent to-transparent pointer-events-none"></div>
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold uppercase tracking-widest mb-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/20 border border-violet-400/30 text-violet-300 text-xs font-bold uppercase tracking-widest mb-6">
             <UserPlus className="w-3.5 h-3.5" />
             <span>Pillar 03 · Healthcare Careers With Dignity</span>
           </div>
@@ -116,7 +116,7 @@ export default function BecomePartner() {
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href="#apply-form"
-              className="px-7 py-3.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-ink font-bold text-sm sm:text-base flex items-center gap-2 shadow-lg shadow-emerald-500/25 transition-all"
+              className="px-7 py-3.5 rounded-full bg-brand-gradient hover:brightness-110 text-white font-bold text-sm sm:text-base flex items-center gap-2 shadow-lg shadow-violet-500/25 transition-all"
             >
               <span>Apply in 1 Minute</span>
               <ArrowRight className="w-4 h-4" />
@@ -127,7 +127,7 @@ export default function BecomePartner() {
               rel="noreferrer"
               className="px-6 py-3.5 rounded-full border border-white/20 hover:border-white/40 text-white font-semibold text-sm sm:text-base flex items-center gap-2 transition-colors"
             >
-              <MessageSquare className="w-4 h-4 text-emerald-400" />
+              <MessageSquare className="w-4 h-4 text-flare" />
               <span>Recruiter Helpline (WhatsApp): {SUPPORT_PHONE_DISPLAY}</span>
             </a>
           </div>
@@ -140,7 +140,7 @@ export default function BecomePartner() {
           
           {/* Left Column: Benefits & Growth */}
           <div className="lg:col-span-7">
-            <span className="text-xs font-bold uppercase tracking-widest text-emerald-700">Real Employee Benefits</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-violet">Real Employee Benefits</span>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-4">
               Why Care Professionals Choose ROSKYRO
             </h2>
@@ -150,8 +150,8 @@ export default function BecomePartner() {
 
             <div className="grid sm:grid-cols-2 gap-4 mb-10">
               {BENEFITS.map(({ icon: Icon, title, desc }) => (
-                <div key={title} className="bg-white border border-ink/10 rounded-2xl p-5 shadow-xs hover:border-emerald-300 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
+                <div key={title} className="bg-white border border-ink/10 rounded-2xl p-5 shadow-xs hover:border-violet-300 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-violet/10 text-violet flex items-center justify-center mb-3">
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="font-bold text-ink text-sm mb-1">{title}</div>
@@ -163,13 +163,13 @@ export default function BecomePartner() {
             {/* Eligibility */}
             <div className="bg-white border border-ink/10 rounded-2xl p-6 sm:p-7 shadow-xs">
               <div className="font-display text-lg font-bold text-ink mb-3 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-600" />
+                <Sparkles className="w-4 h-4 text-violet" />
                 <span>Who Can Apply?</span>
               </div>
               <ul className="space-y-2.5 text-xs sm:text-sm text-ink/80">
                 {REQUIREMENTS.map((req) => (
                   <li key={req} className="flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-violet shrink-0 mt-0.5" />
                     <span>{req}</span>
                   </li>
                 ))}
@@ -179,8 +179,8 @@ export default function BecomePartner() {
 
           {/* Right Column: Application Form */}
           <div id="apply-form" className="lg:col-span-5">
-            <div className="bg-white border-2 border-emerald-200 rounded-3xl p-6 sm:p-8 shadow-xl relative">
-              <div className="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">
+            <div className="bg-white border-2 border-violet-200 rounded-3xl p-6 sm:p-8 shadow-xl relative">
+              <div className="text-xs font-bold uppercase tracking-wider text-violet mb-1">
                 Direct Officer Hiring
               </div>
               <h3 className="font-display text-2xl font-bold text-ink mb-2">Apply Online Now</h3>
@@ -206,7 +206,7 @@ export default function BecomePartner() {
                       value={form.full_name}
                       onChange={(e) => setForm({ ...form, full_name: e.target.value })}
                       placeholder="e.g. Rahul Verma"
-                      className="w-full text-xs sm:text-sm rounded-xl border border-ink/15 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50/50"
+                      className="w-full text-xs sm:text-sm rounded-xl border border-ink/15 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-violet-500 bg-slate-50/50"
                     />
                   </div>
 
@@ -218,7 +218,7 @@ export default function BecomePartner() {
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
                       placeholder="e.g. 9876543210"
-                      className="w-full text-xs sm:text-sm rounded-xl border border-ink/15 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50/50"
+                      className="w-full text-xs sm:text-sm rounded-xl border border-ink/15 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-violet-500 bg-slate-50/50"
                     />
                   </div>
 
@@ -229,7 +229,7 @@ export default function BecomePartner() {
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
                       placeholder="e.g. rahul@example.com"
-                      className="w-full text-xs sm:text-sm rounded-xl border border-ink/15 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50/50"
+                      className="w-full text-xs sm:text-sm rounded-xl border border-ink/15 px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-violet-500 bg-slate-50/50"
                     />
                   </div>
 
@@ -242,7 +242,7 @@ export default function BecomePartner() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/20 transition-all disabled:opacity-50"
+                    className="w-full py-3 rounded-xl bg-brand-gradient hover:brightness-110 text-white font-bold text-sm shadow-md shadow-violet-500/25 transition-all disabled:opacity-50"
                   >
                     {loading ? "Submitting..." : "Submit Officer Application"}
                   </button>
@@ -260,7 +260,7 @@ export default function BecomePartner() {
               <div className="space-y-2.5">
                 {STEPS.map((s) => (
                   <div key={s.title} className="flex items-start gap-2 text-xs">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-violet shrink-0 mt-0.5" />
                     <div>
                       <span className="font-bold text-ink">{s.title}:</span>{" "}
                       <span className="text-ink-muted">{s.desc}</span>
