@@ -1,4 +1,4 @@
-import { Quote, ArrowRight, ShieldCheck, HeartHandshake, MessageSquare, Zap, UserCheck, Stethoscope, MessageCircle, Ambulance, CheckCircle2, HeartPulse } from "lucide-react";
+import { Quote, ArrowRight, ShieldCheck, HeartHandshake, MessageSquare, Zap, UserCheck, Stethoscope, MessageCircle, Ambulance, CheckCircle2, HeartPulse, HelpCircle, Plane, CalendarCheck, Building2, ClipboardList, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { BRAND, SUPPORT_PHONE_DISPLAY, BOOK_WA_LINK } from "../config";
 import useSEO from "../hooks/useSEO";
@@ -49,6 +49,30 @@ const MEMBERSHIP_VALUE = [
     title: "Verified Ambulance & Medical-Travel Coordination",
     body: "If a referral to another facility or emergency transport is needed, a verified, coordinated arrangement is already in place — instead of your family having to source transport at the last minute during a stressful moment.",
   },
+];
+
+const FAMILY_PROBLEM_QUESTIONS = [
+  "Who should we call?",
+  "Where should we go?",
+  "Who will arrange the appointment?",
+  "What happens if we need a specialist or hospital?",
+  "Who will keep the family updated?",
+];
+
+const YOUR_DOCTOR_ROLE = [
+  { icon: CalendarCheck, text: "Regular consultations and follow-ups" },
+  { icon: HeartHandshake, text: "Ongoing medical relationship" },
+  { icon: Stethoscope, text: "Clinical guidance and referrals when needed" },
+];
+
+const YOUR_CONCIERGE_ROLE = [
+  { icon: CalendarCheck, text: "Appointment coordination" },
+  { icon: Stethoscope, text: "Specialist coordination" },
+  { icon: Building2, text: "Hospital coordination" },
+  { icon: ClipboardList, text: "Diagnostics coordination" },
+  { icon: ShieldCheck, text: "Admission & discharge assistance" },
+  { icon: Users, text: "Family & NRI updates" },
+  { icon: Plane, text: "Medical travel coordination" },
 ];
 
 const CORE_RO_SUPPORT = [
@@ -139,6 +163,94 @@ export default function ForPatients() {
                 <div className="text-[11px] text-white/50">{m.desc}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Healthcare shouldn't feel like a series of appointments — the
+          problem families face, and the ROSKYRO solution, framed from
+          the patient/family side */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <span className="text-xs font-bold tracking-widest uppercase text-violet">Why ROSKYRO</span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink mt-2 mb-4">
+            Healthcare Shouldn&rsquo;t Feel Like a Series of Appointments
+          </h2>
+          <p className="text-ink-muted text-sm sm:text-base leading-relaxed">
+            When you or your parents need regular medical care, the difficult part isn&rsquo;t always finding a doctor.
+            It&rsquo;s everything around the doctor.
+          </p>
+          <p className="text-ink-muted text-sm sm:text-base leading-relaxed mt-2">
+            Appointments. Follow-ups. Specialists. Hospitals. Diagnostics. Admission. Discharge. Keeping the family informed.
+          </p>
+        </div>
+
+        {/* The problem */}
+        <div className="bg-clay/5 border border-clay/20 rounded-3xl p-6 sm:p-10 mb-8">
+          <span className="text-xs font-bold tracking-widest uppercase text-clay">The Problem</span>
+          <h3 className="font-display text-xl sm:text-2xl font-bold text-ink mt-2 mb-3">
+            With every new medical need, families often have to start coordinating all over again.
+          </h3>
+          <div className="grid sm:grid-cols-2 gap-3 mt-6">
+            {FAMILY_PROBLEM_QUESTIONS.map((q) => (
+              <div key={q} className="flex items-start gap-2.5 bg-white border border-clay/20 rounded-xl p-3.5">
+                <HelpCircle className="w-4 h-4 text-clay shrink-0 mt-0.5" />
+                <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">{q}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs sm:text-sm text-ink-muted leading-relaxed mt-6">
+            For older adults and people who need regular care, this coordination can become a constant responsibility.
+          </p>
+        </div>
+
+        {/* The ROSKYRO solution */}
+        <div className="bg-ink text-white rounded-3xl p-6 sm:p-10">
+          <span className="text-xs font-bold tracking-widest uppercase text-flare">The ROSKYRO Solution</span>
+          <h3 className="font-display text-xl sm:text-2xl font-bold mt-2 mb-3">
+            One Trusted Doctor. One Healthcare Concierge.
+          </h3>
+          <p className="text-white/70 text-xs sm:text-sm leading-relaxed">
+            With a ROSKYRO Doctor Concierge Membership, you stay connected with your regular doctor for ongoing care.
+            And ROSKYRO takes care of the coordination around that care.
+          </p>
+
+          <div className="grid sm:grid-cols-2 gap-5 mt-8">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-5 sm:p-6">
+              <div className="font-display text-base sm:text-lg font-bold text-white mb-4">Your Doctor</div>
+              <div className="space-y-3">
+                {YOUR_DOCTOR_ROLE.map(({ icon: Icon, text }) => (
+                  <div key={text} className="flex items-start gap-2.5">
+                    <Icon className="w-4 h-4 text-violet-300 shrink-0 mt-0.5" />
+                    <p className="text-xs sm:text-sm text-white/80 leading-relaxed">{text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-5 sm:p-6">
+              <div className="font-display text-base sm:text-lg font-bold text-white mb-4">Your ROSKYRO Concierge</div>
+              <div className="space-y-3">
+                {YOUR_CONCIERGE_ROLE.map(({ icon: Icon, text }) => (
+                  <div key={text} className="flex items-start gap-2.5">
+                    <Icon className="w-4 h-4 text-flare shrink-0 mt-0.5" />
+                    <p className="text-xs sm:text-sm text-white/80 leading-relaxed">{text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-3xl mx-auto mt-8 text-center space-y-2">
+            <p className="text-white/80 text-sm sm:text-base leading-relaxed">
+              You stay connected to your doctor. We stay connected to everything around your care.
+            </p>
+            <p className="text-white/60 text-xs sm:text-sm leading-relaxed">
+              So instead of managing healthcare one appointment at a time, you have a team that helps coordinate your healthcare journey over time.
+            </p>
+            <p className="text-flare text-sm sm:text-base font-bold pt-2">
+              One Doctor for continuity. One Concierge for everything around care.
+            </p>
           </div>
         </div>
       </div>

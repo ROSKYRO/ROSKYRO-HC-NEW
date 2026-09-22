@@ -95,6 +95,18 @@ const PROBLEMS = [
   "Maintaining dedicated concierge / PRO staff means additional recruitment, training and payroll cost for the hospital.",
 ];
 
+const COORDINATION_QUESTIONS = [
+  "“Doctor कब आएंगे?”",
+  "“Report आई?”",
+  "“Test कहां होगा?”",
+  "“Billing में क्या करना है?”",
+  "“Discharge कब होगा?”",
+  "“Family को क्या update दें?”",
+  "“दूसरे department में कैसे जाएं?”",
+  "“Ambulance arrange करनी है”",
+  "“Relative बार-बार फोन कर रहे हैं”",
+];
+
 const RO_RESPONSIBILITIES = [
   "Counsels patients and attendants on treatment and related procedures.",
   "Explains treatment plans, investigations, procedures and packages clearly and professionally.",
@@ -275,6 +287,49 @@ export default function ForHospitals() {
               <p className="text-xs sm:text-sm text-ink-muted leading-relaxed">{p}</p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* The real FAT: Hospital's hidden coordination burden */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-20">
+        <div className="bg-ink text-white rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-violet-500/20 via-transparent to-transparent pointer-events-none"></div>
+
+          <div className="relative z-10">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <span className="text-xs font-bold tracking-widest uppercase text-flare">असली FAT</span>
+              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold mt-2 mb-3">
+                Hospital का “Coordination Burden”
+              </h2>
+              <p className="text-white/70 text-sm sm:text-base leading-relaxed">
+                Hospital का hidden cost = <span className="text-white font-semibold">Patient Coordination Complexity</span>
+              </p>
+              <p className="text-white/60 text-xs sm:text-sm leading-relaxed mt-2">
+                Hospital को हर patient के लिए अलग-अलग चीजों में staff time देना पड़ता है:
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 mb-10">
+              {COORDINATION_QUESTIONS.map((q) => (
+                <div key={q} className="flex items-center gap-2.5 bg-white/5 border border-white/10 rounded-xl p-3.5">
+                  <PhoneCall className="w-4 h-4 text-flare shrink-0" />
+                  <p className="text-xs sm:text-sm text-white/80 leading-relaxed">{q}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="max-w-3xl mx-auto text-center space-y-3">
+              <p className="text-white/70 text-xs sm:text-sm leading-relaxed">
+                Hospital इस सबके लिए अलग-अलग software खरीद सकता है।
+              </p>
+              <p className="text-white/70 text-xs sm:text-sm leading-relaxed">
+                लेकिन software अकेले <span className="text-white font-semibold">physical coordination + human trust + family communication</span> solve नहीं करता।
+              </p>
+              <p className="text-flare text-sm sm:text-base font-bold pt-2">
+                और यही ROSKYRO solve करता है।
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
