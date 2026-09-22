@@ -43,6 +43,7 @@ const PLANS = [
 ];
 
 const COVERED = [
+   "Doctor / specialist direct OPD consultation fees",
   "Healthcare concierge & appointment booking",
   "Hospital admission & discharge paperwork coordination",
   "Diagnostic & lab sample home collection coordination",
@@ -52,7 +53,7 @@ const COVERED = [
 ];
 
 const SEPARATE = [
-  "Doctor / specialist direct OPD consultation fees",
+ 
   "Lab tests, MRI/CT scans & hospital admission bills",
   "Prescribed medicine & pharmacy bills",
   "Commercial ambulance base vehicle tariffs",
