@@ -158,6 +158,30 @@ now** — `9999999999 / admin123` is published in the repository.
 
 30. **A seed failure took the whole app down.** Now logged and survived.
 
+31. **Doctor timestamps were serialized wrong.** `app/schemas/doctor.py` used a
+    bare `datetime` on 5 fields (`created_at`, `portal_token_expires_at`,
+    `expires_at`, `occurred_at`) instead of the app's `UTCDateTime`, so the
+    doctor portal (unlike every other page) would have shown timestamps
+    ~5h30m off from real IST time. `test_timezone.py` now actually catches
+    this — it originally passed only because these fields were missed.
+
+32. **A missing/stale static asset silently returned `index.html` (200)
+    instead of a 404.** After any redeploy that changes the hashed JS/CSS
+    filenames, a browser tab left open on the old page would request the old
+    `/assets/index-<oldhash>.js`, get back HTML instead of JS, and fail with a
+    confusing MIME-type error instead of the browser cleanly reloading. The
+    SPA fallback in `main.py` now only applies to extension-less paths (real
+    client routes); anything that looks like a static file and isn't found
+    404s.
+
+33. **No root `.gitignore` existed at all.** `.env` secrets, the local SQLite
+    dev database, `node_modules/`, and the frontend `dist/` build could all
+    have been committed by accident. Added.
+
+34. **`backend/.env.example` and `frontend/.env.example` were referenced by
+    this file but not actually in the repo.** Added both, matching every real
+    setting in `app/core/config.py` and every `VITE_*` var the frontend reads.
+
 ---
 
 ## Checked and clean
